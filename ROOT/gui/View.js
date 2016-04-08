@@ -184,3 +184,22 @@ View.prototype.addImageHelper = function(card, aDiv, URL, listener) {
   }
 };
 
+/**
+ * Change display when user is waiting for opponent to play.
+ */
+View.prototype.blockPlay = function() {
+  var div = document.getElementById("blocking");
+  div.style.display="block";
+  var myHand = document.getElementById("myHand");
+  myHand.style.setProperty("opacity", 0.5);
+};
+
+/**
+ * Allow the user to play once their opponent has played.
+ */
+View.prototype.unblockPlay = function() {
+  var div = document.getElementById("blocking");
+  div.style.display="none";
+  var myHand = document.getElementById("myHand");
+  myHand.style.setProperty("opacity", 1);
+};
