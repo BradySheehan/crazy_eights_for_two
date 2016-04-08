@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head> 
+    <meta charset="UTF-8" />
+    <title>
+      Crazy Eights, MVP version with GUI
+    </title> 
+    <!-- Model classes -->
+    <script type="text/javascript" src="Card.js">
+    </script>
+    <script type="text/javascript" src="Deck.js">
+    </script>
+    <script type="text/javascript" src="Pile.js">
+    </script>
+    <script type="text/javascript" src="Player.js">
+    </script>
+    <!-- View and Presenter classes -->
+    <script type="text/javascript" src="View.js">
+    </script>
+    <script type="text/javascript" src="Presenter.js">
+    </script>
+    <!-- Main program (contains init() method). -->
+    <script type="text/javascript" src="Main.js">
+    </script>
+
+    <style type="text/css">
+      #suitPicker {
+        position:absolute;
+	left:20px;
+	top:115px;
+	background-color:white;
+	border:1px solid black;
+	padding:5px;
+	z-index:200}
+      .clickable { cursor:pointer }
+    </style>
+  </head> 
+  <body onload="init();">
+    <!-- Computer's hand -->
+    <div id="myHand" style="position:relative;height:100px"></div>
+
+    <!-- "table" is deck and discard pile.
+         Put a span where the discard pile will go
+         just as a placeholder (since we're going to
+         use replaceChild on second child to change the
+         display of the discard pile). -->
+    <div id="table"><img id="deck"
+      src="../images/PlayingCards/back.png" 
+      alt="Click to pick a card."
+      style="width:71px;height:96px" 
+      class="clickable"
+      /><span></span></div>
+
+    <!-- User's hand -->
+    <div id="yourHand" style="position:relative;height:100px"></div>
+
+    <!-- 
+	 The suit-picker popup displayed when the user plays an 8.
+         Initially not visible.
+      -->
+    <div id="suitPicker" style="display:none">
+      Pick a suit:
+      <div style="font-size:24pt">
+	<span id="clubs" class="clickable">&clubs;</span>
+	<span id="diamonds" class="clickable" style="color:red">&diams;</span>
+	<span id="hearts" class="clickable" style="color:red">&hearts;</span>
+	<span id="spades" class="clickable">&spades;</span>
+      </div>
+    </div>
+  </body> 
+</html> 
