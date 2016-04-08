@@ -7,6 +7,14 @@ import java.util.regex.*;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.*;
+import java.xml.parsers.SAXParserFactory;
+import java.xml.parsers.SAXParser;
+
+import org.xml.sax.XMLReader;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
+
 
 /**
 *
@@ -26,6 +34,7 @@ public class CrazyServlet extends HttpServlet {
             session.setAttribute("game", games.size() - 1); //check this later
             response.sendRedirect("../../gui/Crazy8.html?player=0");
         } else {
+            //the second player has showed up
             session.setAttribute("game", games.size() - 1);
             response.sendRedirect("../../gui/Crazy8.html?player=1");
         }
@@ -36,21 +45,44 @@ public class CrazyServlet extends HttpServlet {
         if(session.isNew()) {
             doGet(request, response);
         } else if(request.getParameter("type").equals("play")) {
+
             Game game1 = games.get(session.getAttribute("game"));
-            updateGame();
+            //assume we have XML doc with card played? 
+            //remove card from hand, add card to pile, toggle turn, return empty doc
+            Card card1 = getCardFromXMLDoc();
+            game1.player[Integer.parseInt(session.getAttribute("player"))].remove(card1);
+            game1.pile.acceptACard(card1);
             game1.toggleTurn();
             return emptyDoc();
         } else if(request.getParameter("type").equals("pick")) {
             Game game1 = games.get(session.getAttribute("game"));
-            updateDeck();
-            addCardToPlayersHand();
-            toggleTurnIndicator();
+            Card card1 = game1.deck.dealACard();
+            game1.addCard(Integer.parseInt(request.getParameter("player")), card1);
+            game1.toggleTurn();
             return topCardFromDeckAsXMLDoc();
         } else if(request.getParameter("type").equals("poll")) {
             Game game1 = games.get(session.getAttribute("game"));
             return newXMLDoc(game1.player[game1.getNextPlayer()].list, game1.pile, game1.getNextPlayer());
         }
     }
+
+
+    "<?xml version='1.0' encoding='UTF-8'?> \n"+
+"<game> \n"+
+  "<playerTurn>1</playerTurn>   \n"+
+  "<pile suit="h" value="j" asuit=""/>   \n"+
+  "<opponentCards>7  </opponentCards> \n"+
+  "<cards>\n"+
+    "<card suit="h" value="6"/>\n"+
+     "<card suit="h" value="7"/>\n"+
+     "<card suit="d" value="8"/>\n"+
+     "<card suit="s" value="k"/>\n"+
+     "<card suit="h" value="9"/>\n"+
+     "<card suit="c" value="j"/>\n"+
+     "<card suit="d" value="4"/>\n"+
+  "</cards> \n"+
+"</game>   \n ";
+
 }
 
 /**

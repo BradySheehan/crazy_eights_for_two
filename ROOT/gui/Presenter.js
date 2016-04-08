@@ -42,6 +42,7 @@ function Presenter() {
   request.addEventListener("load", 
     function() { presenter.completeInitialization(request);} );
   request.open("POST", "/CrazyServlet");
+  request.setonreadystatechange = function() {extractXMLData();};
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   request.send("type=poll"); //query string
 }
@@ -156,7 +157,7 @@ Presenter.prototype.playComputer = function() {
     this.view.displayPileTopCard(card);
     if (this.pile.getTopCard().getValue() == "8") {
       this.pile.setAnnouncedSuit(card.getSuit());
-    }    
+    }
     this.view.displayComputerHand(this.computer.getHandCopy());
     if (this.computer.isHandEmpty()) {
       this.view.announceComputerWinner();
@@ -165,5 +166,51 @@ Presenter.prototype.playComputer = function() {
   else {
     this.computer.add(this.deck.dealACard());
     this.view.displayComputerHand(this.computer.getHandCopy());
+  }
+};
+
+Presenter.prototype.playCardHandler = function(connection) {
+  //tell view to update player hand and pile
+  //get suit, as needed (if played an 8)
+  //send play data to servet (card and suit)
+    //can send as a simple query string
+    //no need to parse empty responde
+  //if user has won, announc win
+  //else block user and set up interval polling
+};
+
+Presenter.prototype.pollHandler = function(connection) {
+  request.send("type=poll");
+  //if other player has played
+    //cancel further polling
+    //update opponet hand and possibly pile
+    //tell view to update display
+      //announce suit if necessary
+    //announce win if opponenthas won
+    //tell view to unblock play
+    
+    view.unblockPlay();
+
+
+};
+
+Presenter.prototype.drawCardHandler = function(connection){
+  connection.send("type=pick");
+  connection.setonreadystatechange = function() { drawCard(); };
+  //we need to update player hand with card drawn
+  //tell view to siplay the player hand
+  //tell view to block play
+  //set up interval polling
+  view.blockPlay();
+};
+
+Presenter.prototype.extractXMLData = function(){
+  //parse XML document
+  if (empty) {
+    poll for data
+  } else if (playedCard) {
+    //play card then call play card handler
+  } else if (drewCard) {
+    //draw card then call draw card handler
   }
 };
