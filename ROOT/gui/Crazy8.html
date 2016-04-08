@@ -33,6 +33,7 @@
 	padding:5px;
 	z-index:200}
       .clickable { cursor:pointer }
+      /*.blocking{} set bording, opacity, color */
     </style>
   </head> 
   <body onload="init();">
@@ -44,14 +45,16 @@
          just as a placeholder (since we're going to
          use replaceChild on second child to change the
          display of the discard pile). -->
-    <div id="table"><img id="deck"
+    <div id="table">
+    <div id="blocking" style="position:relative;height:25px;display:none"><p>Waiting for opponent to play...</p></div>  
+    <img id="deck"
       src="../images/PlayingCards/back.png" 
       alt="Click to pick a card."
       style="width:71px;height:96px" 
       class="clickable"
       /><span></span></div>
 
-    <!-- User's hand -->
+    <!-- User's hand here is where we set opacity-->
     <div id="yourHand" style="position:relative;height:100px"></div>
 
     <!-- 
@@ -61,10 +64,10 @@
     <div id="suitPicker" style="display:none">
       Pick a suit:
       <div style="font-size:24pt">
-	<span id="clubs" class="clickable">&clubs;</span>
-	<span id="diamonds" class="clickable" style="color:red">&diams;</span>
-	<span id="hearts" class="clickable" style="color:red">&hearts;</span>
-	<span id="spades" class="clickable">&spades;</span>
+      	<span id="clubs" class="clickable">&clubs;</span>
+      	<span id="diamonds" class="clickable" style="color:red">&diams;</span>
+      	<span id="hearts" class="clickable" style="color:red">&hearts;</span>
+      	<span id="spades" class="clickable">&spades;</span>
       </div>
     </div>
   </body> 

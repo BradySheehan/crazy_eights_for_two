@@ -12,6 +12,8 @@ function Presenter() {
    * dealing 7 cards to each player.  Then create
    * View, set listeners, and display the initial situation.
    */
+  
+//added code for interacting with server//
   this.deck = new Deck();
   do {
     this.deck.shuffle();
@@ -34,6 +36,27 @@ function Presenter() {
   this.view.displayComputerHand(this.computer.getHandCopy());
   this.view.displayPileTopCard(this.pile.getTopCard());
   this.view.displayHumanHand(this.human.getHandCopy());
+  this.playerNumber;
+  var request = new XMLHttpRequest();
+  var presenter = this;
+  request.addEventListener("load", 
+    function() { presenter.completeInitialization(request);} );
+  request.open("POST", "/CrazyServlet");
+  request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  request.send("type=poll"); //query string
+}
+
+Presenter.prototype.completeInitialization = function(request) {
+  if(request.status==200) {
+    var responseDocument = request.responseXML;
+
+    //extract data from XML and update model
+    //
+    if(notMyTurn) {
+      //view.blockPlay();
+      //setIntervalPolling();
+    }
+  }
 }
 
 /**
