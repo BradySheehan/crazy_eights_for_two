@@ -82,28 +82,16 @@ public class CrazyServlet extends HttpServlet {
         pile1.setAttribute(doc.createAttribute("suit").setValue(pile.getTopCard().suit));
         pile1.setAttribute(doc.createAttribute("value").setValue(pile.getTopCard().value));
         pile1.setAttribute(doc.createAttribute("asuit").setValue(pile.getAnnouncedSuit());
-        for(Card:hand) {
 
+        Element cards = doc.createElement("cards");
+        for(Card c1:hand) {
+            Element card = doc.createElement("card");
+            card.setAttribute(doc.createAttribute("suit").setValue(c1.suit));
+            card.setAttribute(doc.createAttribute("value").setValue(c1.value));
+            cards.appendChild(card);
         }
 
     }
-
-    "<?xml version='1.0' encoding='UTF-8'?> \n"+
-"<game> \n"+
-  "<playerTurn>1</playerTurn>   \n"+
-  "<pile suit="h" value="j" asuit=""/>   \n"+
-  "<opponentCards>7  </opponentCards> \n"+
-  "<cards>\n"+
-    "<card suit="h" value="6"/>\n"+
-     "<card suit="h" value="7"/>\n"+
-     "<card suit="d" value="8"/>\n"+
-     "<card suit="s" value="k"/>\n"+
-     "<card suit="h" value="9"/>\n"+
-     "<card suit="c" value="j"/>\n"+
-     "<card suit="d" value="4"/>\n"+
-  "</cards> \n"+
-"</game>   \n ";
-
 }
 
 /**
