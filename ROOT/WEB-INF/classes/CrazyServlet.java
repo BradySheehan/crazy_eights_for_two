@@ -7,13 +7,11 @@ import java.util.regex.*;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.*;
-import java.xml.parsers.SAXParserFactory;
-import java.xml.parsers.SAXParser;
 
-import org.xml.sax.XMLReader;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 
 /**
@@ -42,6 +40,7 @@ public class CrazyServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
+        response.setContentType("application/xml; charset=\"UTF-8\"");
         if(session.isNew()) {
             doGet(request, response);
         } else if(request.getParameter("type").equals("play")) {
@@ -53,6 +52,7 @@ public class CrazyServlet extends HttpServlet {
             game1.player[Integer.parseInt(session.getAttribute("player"))].remove(card1);
             game1.pile.acceptACard(card1);
             game1.toggleTurn();
+            response.s
             return emptyDoc();
         } else if(request.getParameter("type").equals("pick")) {
             Game game1 = games.get(session.getAttribute("game"));
@@ -62,10 +62,31 @@ public class CrazyServlet extends HttpServlet {
             return topCardFromDeckAsXMLDoc();
         } else if(request.getParameter("type").equals("poll")) {
             Game game1 = games.get(session.getAttribute("game"));
-            return newXMLDoc(game1.player[game1.getNextPlayer()].list, game1.pile, game1.getNextPlayer());
+            PrintWriter pw = response.getWriter();
+            pw.println(newPollXMLDoc(game1.player[game1.getNextPlayer()].list, game1.pile, game1.getNextPlayer());
         }
     }
 
+    public String newPollXMLDoc(ArrayList<Card> hand, Pile pile, int playerNum) {
+        DocumentBuilderFactory dbFactory =DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder =  dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.newDocument();
+
+        Element root = doc.createElement("game");
+        doc.appendChild(root);
+
+        Element playerTurn = doc.createElement("playerturn");
+        playerTurn.appendChild(doc.createTextNode(playerNum));
+
+        Element pile1 = doc.createElement("pile");
+        pile1.setAttribute(doc.createAttribute("suit").setValue(pile.getTopCard().suit));
+        pile1.setAttribute(doc.createAttribute("value").setValue(pile.getTopCard().value));
+        pile1.setAttribute(doc.createAttribute("asuit").setValue(pile.getAnnouncedSuit());
+        for(Card:hand) {
+
+        }
+
+    }
 
     "<?xml version='1.0' encoding='UTF-8'?> \n"+
 "<game> \n"+

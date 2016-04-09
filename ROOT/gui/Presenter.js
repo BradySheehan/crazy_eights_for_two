@@ -42,20 +42,19 @@ function Presenter() {
   request.addEventListener("load", 
     function() { presenter.completeInitialization(request);} );
   request.open("POST", "/CrazyServlet");
-  request.setonreadystatechange = function() {extractXMLData();};
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   request.send("type=poll"); //query string
 }
 
 Presenter.prototype.completeInitialization = function(request) {
   if(request.status==200) {
-    var responseDocument = request.responseXML;
-
+    var responseDocument = request.responseXML; 
+    var notMyTurn; 
     //extract data from XML and update model
-    //
+    //tell view to display extracted data
     if(notMyTurn) {
-      //view.blockPlay();
-      //setIntervalPolling();
+      view.blockPlay();
+      var id = window.setInterval("pollHandler(request, id)", 1500);
     }
   }
 }
@@ -179,29 +178,39 @@ Presenter.prototype.playCardHandler = function(connection) {
   //else block user and set up interval polling
 };
 
-Presenter.prototype.pollHandler = function(connection) {
+Presenter.prototype.pollHandler = function(request, intervalId) {
   request.send("type=poll");
-  //if other player has played
-    //cancel further polling
-    //update opponet hand and possibly pile
-    //tell view to update display
-      //announce suit if necessary
-    //announce win if opponenthas won
-    //tell view to unblock play
-    
+  var respondeDoc = request.responseXML;
+  //parse doc
+  if(played) {
+    window.clearInterval(intervalId);
+    this.computer.
+    //update opponet hand and possibly pile (logic)
+    //tell view to update display (graphics)
+      //announce suit if necessary (displaysuitpicker)
+    //announce win if opponenthas won (check for win)
     view.unblockPlay();
-
+  }
 
 };
 
 Presenter.prototype.drawCardHandler = function(connection){
   connection.send("type=pick");
-  connection.setonreadystatechange = function() { drawCard(); };
-  //we need to update player hand with card drawn
-  //tell view to siplay the player hand
-  //tell view to block play
-  //set up interval polling
+  var id = window.setInterval("drawCard(connection)", 1500);
   view.blockPlay();
+};
+
+Presenter.prototype.drawCard = function(connection){
+  var responseDoc = connection.responseXML;
+  parseXML(responseDoc);
+
+  var card;
+  var numPlayer;
+  this.player.add(card);
+  view.displayHumanHand(this.player.getHandCopy());
+  view.blockPlay();
+  var id = window.setInterval("pollHandler(connection,id)", 1500);
+  //set up interval polling
 };
 
 Presenter.prototype.extractXMLData = function(){
