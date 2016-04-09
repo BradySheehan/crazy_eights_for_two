@@ -52,14 +52,15 @@ public class CrazyServlet extends HttpServlet {
             game1.player[Integer.parseInt(session.getAttribute("player"))].remove(card1);
             game1.pile.acceptACard(card1);
             game1.toggleTurn();
-            response.s
-            return emptyDoc();
+            PrintWriter pw = response.getWriter();
+            pw.println(emptyDoc());
         } else if(request.getParameter("type").equals("pick")) {
             Game game1 = games.get(session.getAttribute("game"));
             Card card1 = game1.deck.dealACard();
             game1.addCard(Integer.parseInt(request.getParameter("player")), card1);
             game1.toggleTurn();
-            return topCardFromDeckAsXMLDoc();
+            PrintWriter pw = response.getWriter();
+            pw.println(topCardFromDeckAsXMLDoc(game1.deck.dealACard()));
         } else if(request.getParameter("type").equals("poll")) {
             Game game1 = games.get(session.getAttribute("game"));
             PrintWriter pw = response.getWriter();
@@ -91,6 +92,29 @@ public class CrazyServlet extends HttpServlet {
             cards.appendChild(card);
         }
 
+        return "";
+
+    }
+
+    public String topCardFromDeckAsXMLDoc(Card c) {
+        DocumentBuilderFactory dbFactory =DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder =  dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.newDocument();
+
+        Element root = doc.createElement("card");
+        root.setAttribute(doc.createAttribute("suit").setValue(c.suit));
+        root.setAttribute(doc.createAttribute("value").setValue(c.value));
+        root.appendChild(root);
+
+
+    return "";
+    }
+
+    public String emptyDoc() {
+        DocumentBuilderFactory dbFactory =DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder =  dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.newDocument();
+        return "";
     }
 }
 
