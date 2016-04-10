@@ -70,7 +70,7 @@ public class CrazyServlet extends HttpServlet {
         } else if(request.getParameter("type").equals("pick")) {
             Game game1 = games.get((int)session.getAttribute("game"));
             Card card1 = game1.deck.dealACard();
-            game1.addCard((Integer)(request.getParameter("player")), card1);
+            game1.addCard(Integer.parseInt(request.getParameter("player")), card1);
             game1.toggleTurn();
             pw = response.getWriter();
 			  doc = topCardFromDeckAsXMLDoc(game1.deck.dealACard());
