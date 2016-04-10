@@ -10,8 +10,8 @@ import java.util.*;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.Transformer;
@@ -92,18 +92,19 @@ public class CrazyServlet extends HttpServlet {
         doc.appendChild(root);
 
         Element playerTurn = doc.createElement("playerturn");
-        playerTurn.appendChild(doc.createTextNode(playerNum));
+        playerTurn.appendChild(doc.createTextNode(String.valueOf(playerNum)));
 
         Element pile1 = doc.createElement("pile");
-        pile1.setAttribute(doc.createAttribute("suit").setValue(pile.getTopCard().suit));
-        pile1.setAttribute(doc.createAttribute("value").setValue(pile.getTopCard().value));
-        pile1.setAttribute(doc.createAttribute("asuit").setValue(pile.getAnnouncedSuit()));
+        pile1.setAttribute("suit", pile.getTopCard().suit);
+        pile1.setAttribute("value", pile.getTopCard().value);
+        pile1.setAttribute("asuit", pile.getAnnouncedSuit());
 
         Element cards = doc.createElement("cards");
+		 
         for(Card c1:hand) {
             Element card = doc.createElement("card");
-            card.setAttribute(doc.createAttribute("suit").setValue(c1.suit));
-            card.setAttribute(doc.createAttribute("value").setValue(c1.value));
+            card.setAttribute("suit", c1.suit);
+            card.setAttribute("value", c1.value);
             cards.appendChild(card);
         }
         return doc;
@@ -115,8 +116,8 @@ public class CrazyServlet extends HttpServlet {
         Document doc = dBuilder.newDocument();
 
         Element root = doc.createElement("card");
-        root.setAttribute(doc.createAttribute("suit").setValue(c.suit));
-        root.setAttribute(doc.createAttribute("value").setValue(c.value));
+        root.setAttribute("suit", c.suit);
+        root.setAttribute("value", c.value);
         root.appendChild(root);
     	 return doc;
     }
