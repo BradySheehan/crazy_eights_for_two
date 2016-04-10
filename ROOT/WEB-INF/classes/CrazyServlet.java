@@ -11,6 +11,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Element;
 
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.Transformer;
@@ -51,33 +52,34 @@ public class CrazyServlet extends HttpServlet {
 		Transformer transformer = tFactory.newTransformer();
 		
         response.setContentType("application/xml; charset=\"UTF-8\"");
+
         if(session.isNew()) {
             doGet(request, response);
         } else if(request.getParameter("type").equals("play")) {
-
-            Game game1 = games.get(session.getAttribute("game"));
+			  int gameIndex = (int)session.getAttribute("game");
+            Game game1 = games.get(gameIndex);
             //assume we have XML doc with card played? 
             //remove card from hand, add card to pile, toggle turn, return empty doc
-            Card card1 = getCardFromXMLDoc();
-            game1.player[Integer.parseInt(session.getAttribute("player"))].remove(card1);
+            Card card1 = null; // getCardFromXMLDoc();
+            game1.player[(int)(session.getAttribute("player"))].remove(card1);
             game1.pile.acceptACard(card1);
             game1.toggleTurn();
             pw = response.getWriter();
 			  doc = emptyDoc();
             transformer.transform(new DOMSource(doc), new StreamResult(pw));
         } else if(request.getParameter("type").equals("pick")) {
-            Game game1 = games.get(session.getAttribute("game"));
+            Game game1 = games.get((int)session.getAttribute("game"));
             Card card1 = game1.deck.dealACard();
-            game1.addCard(Integer.parseInt(request.getParameter("player")), card1);
+            game1.addCard((Integer)(request.getParameter("player")), card1);
             game1.toggleTurn();
             pw = response.getWriter();
 			  doc = topCardFromDeckAsXMLDoc(game1.deck.dealACard());
             transformer.transform(new DOMSource(doc), new StreamResult(pw));
         } else if(request.getParameter("type").equals("poll")) {
-            Game game1 = games.get(session.getAttribute("game"));
+            Game game1 = games.get((int)session.getAttribute("game"));
             pw = response.getWriter();
-			doc = newPollXMLDoc(game1.player[game1.getNextPlayer()].list, game1.pile, game1.getNextPlayer());
-			transformer.transform(new DOMSource(doc), new StreamResult(pw));
+			  doc = newPollXMLDoc(game1.player[game1.getNextPlayer()].list, game1.pile, game1.getNextPlayer());
+			  transformer.transform(new DOMSource(doc), new StreamResult(pw));
         }
     }
 
