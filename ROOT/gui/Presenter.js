@@ -49,6 +49,8 @@ function Presenter() {
 Presenter.prototype.completeInitialization = function(request) {
   if(request.status==200) {
     var responseDocument = request.responseXML; 
+    var greeting = responseDocument.getElementByID("data").value;
+	 window.alert(greeting);
     var notMyTurn; 
     //extract data from XML and update model
     //tell view to display extracted data

@@ -30,6 +30,37 @@ public class CrazyServlet extends HttpServlet {
     ArrayList<Game> games = new ArrayList<Game>();
 
     public void doGet (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+		// FOR TESTING JAVASCRIPT vvv
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = null;
+		try {
+			dBuilder = dbFactory.newDocumentBuilder();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Document doc = dBuilder.newDocument();
+		Element root = doc.createElement("card");
+		root.setAttribute("data", "hello");
+		doc.appendChild(root);
+		
+		TransformerFactory tFactory = TransformerFactory.newInstance();
+		Transformer transformer = null;
+		try {
+			transformer = tFactory.newTransformer();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		PrintWriter pw = response.getWriter();
+	   try {
+			transformer.transform(new DOMSource(doc), new StreamResult(pw));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	   // FOR TESTING JAVASCRIPT ^^^
+	
+	
+	
         HttpSession session = request.getSession();
         numPlayers++;
         if(numPlayers%2 != 0) {
@@ -45,7 +76,7 @@ public class CrazyServlet extends HttpServlet {
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
+       HttpSession session = request.getSession();
 		PrintWriter pw = null;
 		Document doc = null;
 		TransformerFactory tFactory = TransformerFactory.newInstance();
@@ -101,7 +132,7 @@ public class CrazyServlet extends HttpServlet {
     }
 
     public Document newPollXMLDoc(ArrayList<Card> hand, Pile pile, int playerNum) {
-        DocumentBuilderFactory dbFactory =DocumentBuilderFactory.newInstance();
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
   	     DocumentBuilder dBuilder = null;
 		  try {
 			  dBuilder = dbFactory.newDocumentBuilder();
@@ -150,7 +181,7 @@ public class CrazyServlet extends HttpServlet {
     }
 
     public Document emptyDoc() {
-        DocumentBuilderFactory dbFactory =DocumentBuilderFactory.newInstance();
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = null;
 		  try {
 			  dBuilder = dbFactory.newDocumentBuilder();
