@@ -38,66 +38,66 @@ public class CrazyServlet extends HttpServlet {
             session.setAttribute("game", games.size() - 1); //check this later
             response.sendRedirect("../../gui/Crazy8.html?player=0");
         } else {
-            //the second player has showed up
+            //the second player has shown up
             session.setAttribute("game", games.size() - 1);
             response.sendRedirect("../../gui/Crazy8.html?player=1");
         }
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       HttpSession session = request.getSession();
-		PrintWriter pw = null;
-		Document doc = null;
-		TransformerFactory tFactory = TransformerFactory.newInstance();
-		Transformer transformer = null;
-		try {
-			transformer = tFactory.newTransformer();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+     HttpSession session = request.getSession();
+     PrintWriter pw = null;
+     Document doc = null;
+     TransformerFactory tFactory = TransformerFactory.newInstance();
+     Transformer transformer = null;
+     try {
+       transformer = tFactory.newTransformer();
+     } catch (Exception e) {
+       e.printStackTrace();
+     }
 
-        response.setContentType("application/xml; charset=\"UTF-8\"");
+     response.setContentType("application/xml; charset=\"UTF-8\"");
 
-        if(session.isNew()) {
-            doGet(request, response);
-        } else if(request.getParameter("type").equals("play")) {
-			  int gameIndex = (int)session.getAttribute("game");
-            Game game1 = games.get(gameIndex);
-            //assume we have XML doc with card played?
-            //remove card from hand, add card to pile, toggle turn, return empty doc
-            Card card1 = null; // getCardFromXMLDoc();
-            game1.getThisPlayer((int)(session.getAttribute("player"))).remove(card1);
-            game1.getPile().acceptACard(card1);
-            game1.toggleTurn();
-            pw = response.getWriter();
-			  doc = emptyDoc();
-			  try {
-				  transformer.transform(new DOMSource(doc), new StreamResult(pw));
-			  } catch (Exception e) {
-				  e.printStackTrace();
-			  }
-        } else if(request.getParameter("type").equals("pick")) {
-            Game game1 = games.get((int)session.getAttribute("game"));
-            Card card1 = game1.getDeck().dealACard();
-            game1.addCard(Integer.parseInt(request.getParameter("player")), card1);
-            game1.toggleTurn();
-            pw = response.getWriter();
-			  doc = topCardFromDeckAsXMLDoc(game1.getDeck().dealACard());
-            try {
-				  transformer.transform(new DOMSource(doc), new StreamResult(pw));
-			  } catch (Exception e) {
-				  e.printStackTrace();
-			  }
-        } else if(request.getParameter("type").equals("poll")) {
-            Game game1 = games.get((int)session.getAttribute("game"));
-            pw = response.getWriter();
-			  doc = newPollXMLDoc(game1.getThisPlayer(game1.getNextPlayer()).list, game1.getPile(), game1.getNextPlayer());
-			  try {
-					transformer.transform(new DOMSource(doc), new StreamResult(pw));
-			  } catch (Exception e) {
-				   e.printStackTrace();
-			  }
-        }
+     if(session.isNew()) {
+      doGet(request, response);
+    } else if(request.getParameter("type").equals("play")) {
+     int gameIndex = (int)session.getAttribute("game");
+     Game game1 = games.get(gameIndex);
+      //assume we have XML doc with card played?
+      //remove card from hand, add card to pile, toggle turn, return empty doc
+      Card card1 = null; // getCardFromXMLDoc();
+      game1.getThisPlayer((int)(session.getAttribute("player"))).remove(card1);
+      game1.getPile().acceptACard(card1);
+      game1.toggleTurn();
+      pw = response.getWriter();
+      doc = emptyDoc();
+      try {
+        transformer.transform(new DOMSource(doc), new StreamResult(pw));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } else if(request.getParameter("type").equals("pick")) {
+      Game game1 = games.get((int)session.getAttribute("game"));
+      Card card1 = game1.getDeck().dealACard();
+      game1.addCard(Integer.parseInt(request.getParameter("player")), card1);
+      game1.toggleTurn();
+      pw = response.getWriter();
+      doc = topCardFromDeckAsXMLDoc(game1.getDeck().dealACard());
+      try {
+        transformer.transform(new DOMSource(doc), new StreamResult(pw));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    } else if(request.getParameter("type").equals("poll")) {
+      Game game1 = games.get((int)session.getAttribute("game"));
+      pw = response.getWriter();
+      doc = newPollXMLDoc(game1.getThisPlayer(game1.getNextPlayer()).list, game1.getPile(), game1.getNextPlayer());
+      try {
+       transformer.transform(new DOMSource(doc), new StreamResult(pw));
+     } catch (Exception e) {
+       e.printStackTrace();
+     }
+   }
     }
 
     public Document newPollXMLDoc(ArrayList<Card> hand, Pile pile, int playerNum) {
