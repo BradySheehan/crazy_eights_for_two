@@ -7,7 +7,7 @@ function Pile() {
   /** List of cards on the pile. */
   // For simplicity, 0 is considered the top card of the pile.
   this.list = new Array();
-  
+
   /** If an 8 is played, this is the announced suit preference. */
   this.announcedSuit = "";
 }
@@ -27,13 +27,13 @@ Pile.prototype = {
       retVal = (card.getSuit() == this.announcedSuit);
     }
     else if (card.getSuit() == topCard.getSuit()
-               || 
+               ||
              card.getValue() == topCard.getValue()) {
       retVal = true;
     }
     return retVal;
   },
-  
+
   /**
    * Accept a card and make it the new top of the discard pile.
    */
@@ -43,7 +43,7 @@ Pile.prototype = {
   /**
    * Remember the suit preference announced when the most recent
    * 8 was played.
-   */ 
+   */
   setAnnouncedSuit: function (suit) {
     this.announcedSuit = suit;
   },

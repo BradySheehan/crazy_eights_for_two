@@ -9,20 +9,20 @@ function Player(deck) {
    * This player's hand.
    */
   this.list = new Array();
-  
+
   /**
    * Get seven cards from the deck and store them in this hand.
    */
   for (var i=1; i<=7; i++) {
     this.list.push(deck.dealACard());
-  } 
+  }
 }
 
 Player.prototype = {
   /**
    * Return true when this hand is empty.
    */
-  isHandEmpty: function() {  
+  isHandEmpty: function() {
     return this.list.length == 0;
   },
 
@@ -73,4 +73,4 @@ Player.prototype = {
     return this.list.slice(0);
   },
 
-};  
+};

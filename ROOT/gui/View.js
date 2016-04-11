@@ -13,7 +13,7 @@ function View(presenter) {
  */
 View.prototype.setDeckListener = function(deckListener) {
   var presenter = this.presenter; // close over local copy of presenter ref
-  var deckClickHandler = function(event) { 
+  var deckClickHandler = function(event) {
     deckListener.call(presenter);
   };
   var deckImg = document.getElementById("deck");
@@ -25,8 +25,8 @@ View.prototype.setDeckListener = function(deckListener) {
  */
 View.prototype.setCardListener = function(cardListener) {
   var presenter = this.presenter; // close over local copy of presenter ref
-  this.cardClickHandler = function(event) { 
-    // Card's string representation is stored as value of 
+  this.cardClickHandler = function(event) {
+    // Card's string representation is stored as value of
     // alt attribute of the img element representing the card.
     var cardString = event.target.getAttribute("alt");
     cardListener.call(presenter, cardString);
@@ -38,7 +38,7 @@ View.prototype.setCardListener = function(cardListener) {
  */
 View.prototype.setSuitListener = function(suitListener) {
   var presenter = this.presenter; // close over local copy of presenter ref
-  var suitClickHandler = function(event) { 
+  var suitClickHandler = function(event) {
     // First letter of id of clicked image is the selected suit
     var suit = event.target.getAttribute("id")[0];
     suitListener.call(presenter, suit);
@@ -59,7 +59,7 @@ View.prototype.setSuitListener = function(suitListener) {
  * Hand is an array of Card's.
  */
 View.prototype.displayComputerHand = function(hand) {
-  var myDiv = document.getElementById("myHand"); 
+  var myDiv = document.getElementById("myHand");
 
   // Hand has more cards than are displayed, so add some to display
   if (hand.length > myDiv.childNodes.length) {
@@ -67,7 +67,6 @@ View.prototype.displayComputerHand = function(hand) {
       this.addBackCardImage(hand[i],myDiv);
     }
   }
-
   // Hand has fewer than are displayed, so remove some from display.
   else {
     while (hand.length < myDiv.childNodes.length) {
@@ -98,7 +97,7 @@ View.prototype.displayWrongCardMsg = function(cardString) {
 };
 
 /**
- * Display the human hand. 
+ * Display the human hand.
  */
 View.prototype.displayHumanHand = function(hand) {
   // This implementation removes all card images from the div
@@ -152,7 +151,7 @@ View.prototype.addCardImage = function(card, aDiv, listener) {
   this.addImageHelper(card, aDiv, card.getURL(), listener);
 };
 
-/** Internal function for adding back of card to the given 
+/** Internal function for adding back of card to the given
  *  div (computer's hand). */
 View.prototype.addBackCardImage = function(card, aDiv) {
   this.addImageHelper(card, aDiv, card.getBackURL());
@@ -172,15 +171,15 @@ View.prototype.addImageHelper = function(card, aDiv, URL, listener) {
   newImg.style.setProperty("left", (cardPos * card.pixelOffset) + "px", "");
   newImg.style.setProperty("top", "0", "");
   // each card is "on top of" the previous cards
-  newImg.style.setProperty("z-index", String(cardPos+1), ""); 
+  newImg.style.setProperty("z-index", String(cardPos+1), "");
   newImg.style.setProperty("width", card.width + "px", "");
-  newImg.style.setProperty("height", card.height + "px", "");	
+  newImg.style.setProperty("height", card.height + "px", "");
 
   // If onclick listener supplied, add it to image and set cursor appropriately
   // to show that the card is clickable.
   if (listener) {
     newImg.style.setProperty("cursor", "pointer", "");
-    newImg.addEventListener("click", listener, false);	
+    newImg.addEventListener("click", listener, false);
   }
 };
 
