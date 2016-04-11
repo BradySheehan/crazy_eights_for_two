@@ -30,37 +30,6 @@ public class CrazyServlet extends HttpServlet {
     ArrayList<Game> games = new ArrayList<Game>();
 
     public void doGet (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
-		// FOR TESTING JAVASCRIPT vvv
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder = null;
-		try {
-			dBuilder = dbFactory.newDocumentBuilder();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		Document doc = dBuilder.newDocument();
-		Element root = doc.createElement("card");
-		root.setAttribute("data", "hello");
-		doc.appendChild(root);
-		
-		TransformerFactory tFactory = TransformerFactory.newInstance();
-		Transformer transformer = null;
-		try {
-			transformer = tFactory.newTransformer();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		PrintWriter pw = response.getWriter();
-	   try {
-			transformer.transform(new DOMSource(doc), new StreamResult(pw));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	   // FOR TESTING JAVASCRIPT ^^^
-	
-	
-	
         HttpSession session = request.getSession();
         numPlayers++;
         if(numPlayers%2 != 0) {
@@ -97,8 +66,8 @@ public class CrazyServlet extends HttpServlet {
             //assume we have XML doc with card played? 
             //remove card from hand, add card to pile, toggle turn, return empty doc
             Card card1 = null; // getCardFromXMLDoc();
-            // game1.player[(int)(session.getAttribute("player"))].remove(card1);
-            // game1.pile.acceptACard(card1);
+            game1.getThisPlayer((int)(session.getAttribute("player"))).remove(card1);
+            game1.getPile().acceptACard(card1);
             game1.toggleTurn();
             pw = response.getWriter();
 			  doc = emptyDoc();
@@ -109,11 +78,11 @@ public class CrazyServlet extends HttpServlet {
 			  }
         } else if(request.getParameter("type").equals("pick")) {
             Game game1 = games.get((int)session.getAttribute("game"));
-            // Card card1 = game1.deck.dealACard();
-            // game1.addCard(Integer.parseInt(request.getParameter("player")), card1);
+            Card card1 = game1.getDeck().dealACard();
+            game1.addCard(Integer.parseInt(request.getParameter("player")), card1);
             game1.toggleTurn();
             pw = response.getWriter();
-			  // doc = topCardFromDeckAsXMLDoc(game1.deck.dealACard());
+			  doc = topCardFromDeckAsXMLDoc(game1.getDeck().dealACard());
             try {
 				  transformer.transform(new DOMSource(doc), new StreamResult(pw));
 			  } catch (Exception e) {
@@ -122,7 +91,7 @@ public class CrazyServlet extends HttpServlet {
         } else if(request.getParameter("type").equals("poll")) {
             Game game1 = games.get((int)session.getAttribute("game"));
             pw = response.getWriter();
-			  // doc = newPollXMLDoc(game1.player[game1.getNextPlayer()].list, game1.pile, game1.getNextPlayer());
+			  doc = newPollXMLDoc(game1.getThisPlayer(game1.getNextPlayer()).list, game1.getPile(), game1.getNextPlayer());
 			  try {
 					transformer.transform(new DOMSource(doc), new StreamResult(pw));
 			  } catch (Exception e) {
@@ -148,16 +117,16 @@ public class CrazyServlet extends HttpServlet {
         playerTurn.appendChild(doc.createTextNode(String.valueOf(playerNum)));
 
         Element pile1 = doc.createElement("pile");
-        // pile1.setAttribute("suit", pile.getTopCard().suit);
-        // pile1.setAttribute("value", pile.getTopCard().value);
+        pile1.setAttribute("suit", pile.getTopCard().getSuit());
+        pile1.setAttribute("value", pile.getTopCard().getValue());
         pile1.setAttribute("asuit", pile.getAnnouncedSuit());
 
         Element cards = doc.createElement("cards");
 		 
         for(Card c1:hand) {
             Element card = doc.createElement("card");
-            // card.setAttribute("suit", c1.suit);
-            // card.setAttribute("value", c1.value);
+            card.setAttribute("suit", c1.getSuit());
+            card.setAttribute("value", c1.getValue());
             cards.appendChild(card);
         }
         return doc;
@@ -174,8 +143,8 @@ public class CrazyServlet extends HttpServlet {
         Document doc = dBuilder.newDocument();
 
         Element root = doc.createElement("card");
-        // root.setAttribute("suit", c.suit);
-        // root.setAttribute("value", c.value);
+        root.setAttribute("suit", c.getSuit());
+        root.setAttribute("value", c.getValue());
         root.appendChild(root);
     	 return doc;
     }

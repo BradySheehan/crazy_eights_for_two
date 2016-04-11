@@ -41,13 +41,13 @@ function Presenter() {
   var presenter = this;
   request.addEventListener("load", 
     function() { presenter.completeInitialization(request);} );
-  request.open("POST", "/CrazyServlet");
+  request.open("POST", "/CrazyServlet", true);
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   request.send("type=poll"); //query string
 }
 
 Presenter.prototype.completeInitialization = function(request) {
-  if(request.status==200) {
+  if(request.status == 200) {
     var responseDocument = request.responseXML; 
     var greeting = responseDocument.getElementByID("data").value;
 	 window.alert(greeting);
@@ -217,11 +217,11 @@ Presenter.prototype.drawCard = function(connection){
 
 Presenter.prototype.extractXMLData = function(){
   //parse XML document
-  if (empty) {
+  /*if (empty) {
     poll for data
   } else if (playedCard) {
     //play card then call play card handler
   } else if (drewCard) {
     //draw card then call draw card handler
-  }
+  }*/
 };
