@@ -18,17 +18,11 @@ function Presenter() {
   do {
     this.deck.shuffle();
   } while (this.deck.isTopCardAnEight());
-
   this.pile = new Pile();
-  // this.pile.acceptACard(this.deck.dealACard());
-  // this.human = new Player(this.deck);
-  // this.computer = new Player(this.deck);
-  
-  this.computer = new Player(); //
-  this.player = new Player(); //i think we need to pass cards from XML here to this initialization
   // Create View, providing reference to this Presenter
   this.view = new View(this);
-
+  this.player1 = null; //
+  this.player2 = null; //i think we need to pass cards from XML here to this initialization
   // Ask View to associate event handlers with objects
   this.view.setDeckListener(this.pickCard);
   this.view.setCardListener(this.playCard);
@@ -55,6 +49,7 @@ Presenter.prototype.completeInitialization = function(request) {
     var cards = responseDocument.getElementsByTagName("card")[0].getAttribute("suit");
 	 window.alert(cards);
     var notMyTurn = true;
+    this.player1 = new Player(hand); //we need to get the hand form xml
     //extract data from XML and update model
     //tell view to display extracted data
     if(notMyTurn) {
