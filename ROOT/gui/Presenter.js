@@ -48,10 +48,11 @@ function Presenter() {
 
 Presenter.prototype.completeInitialization = function(request) {
   if(request.status == 200) {
+	window.alert("In completeInitialization()");
     var responseDocument = request.responseXML; 
-    var greeting = responseDocument.getElementByID("data").value;
-	 window.alert(greeting);
-    var notMyTurn; 
+    var cards = responseDocument.getElementsByID("card");
+	window.alert(cards.length);
+    var notMyTurn = true;
     //extract data from XML and update model
     //tell view to display extracted data
     if(notMyTurn) {
