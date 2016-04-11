@@ -20,10 +20,12 @@ function Presenter() {
   } while (this.deck.isTopCardAnEight());
 
   this.pile = new Pile();
-  this.pile.acceptACard(this.deck.dealACard());
-  this.human = new Player(this.deck);
-  this.computer = new Player(this.deck);
-
+  // this.pile.acceptACard(this.deck.dealACard());
+  // this.human = new Player(this.deck);
+  // this.computer = new Player(this.deck);
+  
+  this.computer = new Player(); //
+  this.player = new Player(); //i think we need to pass cards from XML here to this initialization
   // Create View, providing reference to this Presenter
   this.view = new View(this);
 
@@ -145,30 +147,34 @@ Presenter.prototype.completeUserPlay = function()
  */
 Presenter.prototype.playComputer = function() {
   // Play the first playable card, or pick if none is playable.
-  var i=0;
-  var hand = this.computer.getHandCopy(); // copy of hand for convenience
-  var card = hand[0];
-  while (!this.pile.isValidToPlay(card) && i<hand.length-1) {
-    i++;
-    card = hand[i];
-  }
-  hand = null; // actual hand will change below, so don't continue to use copy
-  if (this.pile.isValidToPlay(card)) {
-    this.computer.remove(i);
-    this.pile.acceptACard(card);
-    this.view.displayPileTopCard(card);
-    if (this.pile.getTopCard().getValue() == "8") {
-      this.pile.setAnnouncedSuit(card.getSuit());
-    }
-    this.view.displayComputerHand(this.computer.getHandCopy());
-    if (this.computer.isHandEmpty()) {
-      this.view.announceComputerWinner();
-    }
-  }
-  else {
-    this.computer.add(this.deck.dealACard());
-    this.view.displayComputerHand(this.computer.getHandCopy());
-  }
+  // var i=0;
+  // var hand = this.computer.getHandCopy(); // copy of hand for convenience
+  // var card = hand[0];
+  // while (!this.pile.isValidToPlay(card) && i<hand.length-1) {
+  //   i++;
+  //   card = hand[i];
+  // }
+  // hand = null; // actual hand will change below, so don't continue to use copy
+  // if (this.pile.isValidToPlay(card)) {
+  //   this.computer.remove(i);
+  //   this.pile.acceptACard(card);
+  //   this.view.displayPileTopCard(card);
+  //   if (this.pile.getTopCard().getValue() == "8") {
+  //     this.pile.setAnnouncedSuit(card.getSuit());
+  //   }
+  //   this.view.displayComputerHand(this.computer.getHandCopy());
+  //   if (this.computer.isHandEmpty()) {
+  //     this.view.announceComputerWinner();
+  //   }
+  // }
+  // else {
+  //   this.computer.add(this.deck.dealACard());
+  //   this.view.displayComputerHand(this.computer.getHandCopy());
+  // }
+  // 
+  
+
+  //how do both opponents play???
 };
 
 Presenter.prototype.playCardHandler = function(connection) {
