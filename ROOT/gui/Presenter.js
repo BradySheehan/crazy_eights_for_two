@@ -23,7 +23,7 @@ function Presenter() {
   this.pile.acceptACard(this.deck.dealACard());
   this.human = new Player(this.deck);
   this.computer = new Player(this.deck);
-
+  
   // Create View, providing reference to this Presenter
   this.view = new View(this);
 
@@ -50,8 +50,8 @@ Presenter.prototype.completeInitialization = function(request) {
   if(request.status == 200) {
 	window.alert("In completeInitialization()");
     var responseDocument = request.responseXML; 
-    var cards = responseDocument.getElementsByID("card");
-	window.alert(cards.length);
+    var cards = responseDocument.getElementsByTagName("card")[0].getAttribute("suit");
+	 window.alert(cards);
     var notMyTurn = true;
     //extract data from XML and update model
     //tell view to display extracted data
