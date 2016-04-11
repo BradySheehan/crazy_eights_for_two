@@ -1,4 +1,3 @@
-package model;
 /**
  * A single playing card.
  */

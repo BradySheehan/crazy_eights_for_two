@@ -1,4 +1,3 @@
-package model;
 import java.util.ArrayList;
 /**
  * Discard pile of cards.

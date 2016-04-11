@@ -1,4 +1,3 @@
-package model;
 /**
 * Play the game Crazy Eights.
 * The computer player in this version always draws a card.
@@ -9,7 +8,7 @@ public class Game {
    private Pile pile;
    private Player[] player = new Player[2];
    private int nextPlayer = 0; // Second player, #0, goes first.
- 
+
 /**
 * Initialize game by creating and shuffling the deck,
 * dealing one card (other than an 8) to the discard pile,
@@ -45,7 +44,7 @@ public void toggleTurn() {
 
 public Deck getDeck() { return deck; }
 public Pile getPile() { return pile; }
-public Player getThisPlayer(int playerNum) { 
+public Player getThisPlayer(int playerNum) {
    return player[playerNum];
 }
 public Player getOtherPlayer(int playerNum) {
