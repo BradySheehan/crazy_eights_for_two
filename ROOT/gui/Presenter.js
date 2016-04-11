@@ -13,11 +13,6 @@ function Presenter() {
    * View, set listeners, and display the initial situation.
    */
 
-//added code for interacting with server//
-  this.deck = new Deck();
-  do {
-    this.deck.shuffle();
-  } while (this.deck.isTopCardAnEight());
   this.pile = new Pile();
   // Create View, providing reference to this Presenter
   this.view = new View(this);
@@ -27,12 +22,8 @@ function Presenter() {
   this.view.setDeckListener(this.pickCard);
   this.view.setCardListener(this.playCard);
   this.view.setSuitListener(this.setSuit);
-
-  // Display initial situation
-  this.view.displayComputerHand(this.computer.getHandCopy());
-  this.view.displayPileTopCard(this.pile.getTopCard());
-  this.view.displayHumanHand(this.human.getHandCopy());
   this.playerNumber;
+
   var request = new XMLHttpRequest();
   var presenter = this;
   request.addEventListener("load",
@@ -40,6 +31,12 @@ function Presenter() {
   request.open("POST", "/CrazyServlet", true);
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   request.send("type=poll"); //query string
+
+    // Display initial situation
+    // the intial situation won't be displayed until both players are joined?
+  this.view.displayComputerHand(this.computer.getHandCopy());
+  this.view.displayPileTopCard(this.pile.getTopCard());
+  this.view.displayHumanHand(this.human.getHandCopy());
 }
 
 Presenter.prototype.completeInitialization = function(request) {
@@ -49,7 +46,8 @@ Presenter.prototype.completeInitialization = function(request) {
     var cards = responseDocument.getElementsByTagName("card")[0].getAttribute("suit");
 	 window.alert(cards);
     var notMyTurn = true;
-    this.player1 = new Player(hand); //we need to get the hand form xml
+    this.player1 = new Player(hand); //we need to get the hand from xml
+    this.player2 = new Player(hand); //we need to get the hand from xml
     //extract data from XML and update model
     //tell view to display extracted data
     if(notMyTurn) {
