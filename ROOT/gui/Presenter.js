@@ -7,12 +7,12 @@
  */
 function Presenter() {
   /**
-   * Initialize game by creating and shuffling the deck, 
+   * Initialize game by creating and shuffling the deck,
    * dealing one card (other than an 8) to the discard pile, and
    * dealing 7 cards to each player.  Then create
    * View, set listeners, and display the initial situation.
    */
-  
+
 //added code for interacting with server//
   this.deck = new Deck();
   do {
@@ -23,13 +23,13 @@ function Presenter() {
   this.pile.acceptACard(this.deck.dealACard());
   this.human = new Player(this.deck);
   this.computer = new Player(this.deck);
-  
+
   // Create View, providing reference to this Presenter
   this.view = new View(this);
 
   // Ask View to associate event handlers with objects
   this.view.setDeckListener(this.pickCard);
-  this.view.setCardListener(this.playCard);  
+  this.view.setCardListener(this.playCard);
   this.view.setSuitListener(this.setSuit);
 
   // Display initial situation
@@ -39,7 +39,7 @@ function Presenter() {
   this.playerNumber;
   var request = new XMLHttpRequest();
   var presenter = this;
-  request.addEventListener("load", 
+  request.addEventListener("load",
     function() { presenter.completeInitialization(request);} );
   request.open("POST", "/CrazyServlet", true);
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -49,7 +49,7 @@ function Presenter() {
 Presenter.prototype.completeInitialization = function(request) {
   if(request.status == 200) {
 	window.alert("In completeInitialization()");
-    var responseDocument = request.responseXML; 
+    var responseDocument = request.responseXML;
     var cards = responseDocument.getElementsByTagName("card")[0].getAttribute("suit");
 	 window.alert(cards);
     var notMyTurn = true;
@@ -64,7 +64,7 @@ Presenter.prototype.completeInitialization = function(request) {
 
 /**
  * Event: User wants card from the deck.
- * Human hand is given a card from the deck and displayed, 
+ * Human hand is given a card from the deck and displayed,
  * then user's turn is completed (check for a win)
  * before the computer is given a turn.
  */
@@ -90,7 +90,7 @@ Presenter.prototype.playCard = function(cardString) {
 
     // Card is playable.  Remove from hand and add to discard pile.
     // Then, if it's an eight, show the suit-picker.
-    // Either immediately (card played was not an 8) or after the human 
+    // Either immediately (card played was not an 8) or after the human
     // picks a suit (card was an 8), continue to completeUserPlay() to check
     // for win before turning play over to the computer.
     else {

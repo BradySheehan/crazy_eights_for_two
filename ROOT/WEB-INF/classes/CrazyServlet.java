@@ -55,7 +55,7 @@ public class CrazyServlet extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
         response.setContentType("application/xml; charset=\"UTF-8\"");
 
         if(session.isNew()) {
@@ -63,7 +63,7 @@ public class CrazyServlet extends HttpServlet {
         } else if(request.getParameter("type").equals("play")) {
 			  int gameIndex = (int)session.getAttribute("game");
             Game game1 = games.get(gameIndex);
-            //assume we have XML doc with card played? 
+            //assume we have XML doc with card played?
             //remove card from hand, add card to pile, toggle turn, return empty doc
             Card card1 = null; // getCardFromXMLDoc();
             game1.getThisPlayer((int)(session.getAttribute("player"))).remove(card1);
@@ -122,7 +122,7 @@ public class CrazyServlet extends HttpServlet {
         pile1.setAttribute("asuit", pile.getAnnouncedSuit());
 
         Element cards = doc.createElement("cards");
-		 
+
         for(Card c1:hand) {
             Element card = doc.createElement("card");
             card.setAttribute("suit", c1.getSuit());
@@ -171,7 +171,7 @@ public class CrazyServlet extends HttpServlet {
    * This player's hand.
    */
   protected ArrayList<Card> list = new ArrayList<Card>();
-  
+
   /**
    * Get seven cards from the deck and store them in this hand.
    */
@@ -179,8 +179,8 @@ public class CrazyServlet extends HttpServlet {
     for (int i=1; i<=7; i++) {
       list.add(deck.dealACard());
     }
-  } 
-  
+  }
+
   /**
    * Return true when this hand is empty.
    */
@@ -230,8 +230,8 @@ public class CrazyServlet extends HttpServlet {
     return list.iterator();
     }
 }
-  
-  
+
+
 /**
  * Discard pile of cards.
  */
@@ -239,12 +239,12 @@ public class CrazyServlet extends HttpServlet {
   /** List of cards on the pile. */
   // For simplicity, 0 is considered the top card of the pile.
   private ArrayList<Card> list = new ArrayList<Card>();
-  
+
   /** If an 8 is played, this is the announced suit preference. */
   private String announcedSuit;
-  
+
   public Pile() { }
-  
+
   /**
    * Return true if the given card can be legally played on the
    * current pile.
@@ -260,13 +260,13 @@ public class CrazyServlet extends HttpServlet {
     retVal = (card.getSuit().equals(announcedSuit));
     }
     else if (card.getSuit().equals(topCard.getSuit())
-               || 
+               ||
              card.getValue().equals(topCard.getValue())) {
     retVal = true;
     }
     return retVal;
   }
-  
+
   /**
    * Accept a card and make it the new top of the discard pile.
    */
@@ -276,7 +276,7 @@ public class CrazyServlet extends HttpServlet {
   /**
    * Remember the suit preference announced when the most recent
    * 8 was played.
-   */ 
+   */
   public void setAnnouncedSuit(String suit) {
     announcedSuit = suit;
   }
@@ -292,9 +292,9 @@ public class CrazyServlet extends HttpServlet {
     return list.get(0);
   }
 
-    /** 
+    /**
      * Remove all cards but the top one from this list and return
-     * the removed cards as a list. 
+     * the removed cards as a list.
      */
     public ArrayList<Card> removeAllButTop() {
     ArrayList<Card> retList = list;
@@ -314,7 +314,7 @@ public class CrazyServlet extends HttpServlet {
    private Pile pile;
    private Player[] player = new Player[2];
  private int nextPlayer = 0; // Second player, #0, goes first.
- 
+
 /**
 * Initialize game by creating and shuffling the deck,
 * dealing one card (other than an 8) to the discard pile,
@@ -350,7 +350,7 @@ public void toggleTurn() {
 
 public Deck getDeck() { return deck; }
 public Pile getPile() { return pile; }
-public Player getThisPlayer(int playerNum) { 
+public Player getThisPlayer(int playerNum) {
    return player[playerNum];
 }
 public Player getOtherPlayer(int playerNum) {
@@ -371,7 +371,7 @@ public int getNextPlayer() { return nextPlayer; }
     /**
      * Discard pile (take cards from this if deck runs out).
      */
-    private Pile pile; 
+    private Pile pile;
 
   /**
    * Initialize deck to represent regular 52 playing cards.
@@ -401,7 +401,7 @@ public int getNextPlayer() { return nextPlayer; }
       if (list.size() == 0) {
       list = pile.removeAllButTop();
       shuffle();
-      }       
+      }
       return list.remove(0);
   }
   /**
@@ -424,7 +424,7 @@ public int getNextPlayer() { return nextPlayer; }
   { suit = aSuit; value = aValue; }
   public String getSuit() { return suit; }
   public String getValue() { return value; }
-  
+
   /**
    * Return a string representation of this card.
    * This is what will be printed if a Card is passed
@@ -434,13 +434,3 @@ public int getNextPlayer() { return nextPlayer; }
     return value + suit;
   }
 }
-
-// class User {
-// //sessionId
-// //gameNumber
-
-//   public User(int sessionId, int gameNumber) {
-
-
-//   }
-// }
