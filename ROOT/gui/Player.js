@@ -4,18 +4,11 @@
  * Base class for players.  Initializes player's hand
  * and determines whether or not the player's hand is empty.
  */
-function Player(deck) {
+function Player( ) {
   /**
    * This player's hand.
    */
   this.list = new Array();
-
-  /**
-   * Get seven cards from the deck and store them in this hand.
-   */
-  for (var i=1; i<=7; i++) {
-    this.list.push(deck.dealACard());
-  }
 }
 
 Player.prototype = {

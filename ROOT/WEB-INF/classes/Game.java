@@ -43,12 +43,16 @@ public void toggleTurn() {
 }
 
 public Deck getDeck() { return deck; }
+
 public Pile getPile() { return pile; }
+
 public Player getThisPlayer(int playerNum) {
    return player[playerNum];
 }
+
 public Player getOtherPlayer(int playerNum) {
    return player[(playerNum+1)%2];
 }
+
 public int getNextPlayer() { return nextPlayer; }
 }

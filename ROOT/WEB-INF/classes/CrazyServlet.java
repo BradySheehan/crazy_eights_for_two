@@ -32,6 +32,7 @@ public class CrazyServlet extends HttpServlet {
     public void doGet (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         numPlayers++;
+        PrintWriter pw = null;
         if(numPlayers%2 != 0) {
             Game game1 = new Game();
             games.add(game1);
@@ -65,8 +66,8 @@ public class CrazyServlet extends HttpServlet {
      Game game1 = games.get(gameIndex);
       //assume we have XML doc with card played?
       //remove card from hand, add card to pile, toggle turn, return empty doc
-      Card card1 = null; // getCardFromXMLDoc();
-      game1.getThisPlayer((int)(session.getAttribute("player"))).remove(card1);
+      Card card1 = new Card(request.getParameter("suit"), request.getParameter("value")); // getCardFromXMLDoc();
+      game1.getThisPlayer((int)(request.getParameter("player"))).remove(card1);
       game1.getPile().acceptACard(card1);
       game1.toggleTurn();
       pw = response.getWriter();
@@ -91,7 +92,7 @@ public class CrazyServlet extends HttpServlet {
     } else if(request.getParameter("type").equals("poll")) {
       Game game1 = games.get((int)session.getAttribute("game"));
       pw = response.getWriter();
-      doc = newPollXMLDoc(game1.getThisPlayer(game1.getNextPlayer()).list, game1.getPile(), game1.getNextPlayer());
+      doc = newPollXMLDoc(game1, request);
       try {
        transformer.transform(new DOMSource(doc), new StreamResult(pw));
      } catch (Exception e) {
@@ -100,7 +101,10 @@ public class CrazyServlet extends HttpServlet {
    }
     }
 
-    public Document newPollXMLDoc(ArrayList<Card> hand, Pile pile, int playerNum) {
+    public Document newPollXMLDoc(Game game1, HttpServletRequest request) {
+         Pile pile = game1.pile;
+         int playerNum = game1.nextPlayer();
+         int currentPlayer = Integer.parseInt(request.getParameter("player"));
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
   	     DocumentBuilder dBuilder = null;
 		  try {
@@ -116,6 +120,8 @@ public class CrazyServlet extends HttpServlet {
         Element playerTurn = doc.createElement("playerturn");
         playerTurn.appendChild(doc.createTextNode(String.valueOf(playerNum)));
 
+        Element opponentCards = doc.createElement("opponentCards");
+        opponentCards.appendChild(doc.createTextNode(String.valueOf(game1.getOtherPlayer[currentPlayer].getNCards())));
         Element pile1 = doc.createElement("pile");
         pile1.setAttribute("suit", pile.getTopCard().getSuit());
         pile1.setAttribute("value", pile.getTopCard().getValue());

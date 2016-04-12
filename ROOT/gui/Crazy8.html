@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head> 
+  <head>
     <meta charset="UTF-8" />
     <title>
       Crazy Eights, MVP version with GUI
-    </title> 
+    </title>
     <!-- Model classes -->
     <script type="text/javascript" src="Card.js">
     </script>
@@ -33,7 +33,7 @@
       .clickable { cursor:pointer }
       /*.blocking{} set bording, opacity, color */
     </style>
-  </head> 
+  </head>
   <body onload="init();">
     <!-- Computer's hand -->
     <div id="myHand" style="position:relative;height:100px"></div>
@@ -44,18 +44,18 @@
          use replaceChild on second child to change the
          display of the discard pile). -->
     <div id="table">
-    <div id="blocking" style="position:relative;height:25px;display:none"><p>Waiting for opponent to play...</p></div>  
+    <div id="blocking" style="position:relative;height:25px;display:none"><p>Waiting for opponent to play...</p></div>
     <img id="deck"
-      src="../images/PlayingCards/back.png" 
+      src="../images/PlayingCards/back.png"
       alt="Click to pick a card."
-      style="width:71px;height:96px" 
+      style="width:71px;height:96px"
       class="clickable"
       /><span></span></div>
 
     <!-- User's hand here is where we set opacity-->
     <div id="yourHand" style="position:relative;height:100px"></div>
 
-    <!-- 
+    <!--
 	 The suit-picker popup displayed when the user plays an 8.
          Initially not visible.
       -->
@@ -68,5 +68,5 @@
       	<span id="spades" class="clickable">&spades;</span>
       </div>
     </div>
-  </body> 
-</html> 
+  </body>
+</html>
