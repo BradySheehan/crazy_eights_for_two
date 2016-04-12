@@ -25,7 +25,7 @@ function Presenter() {
 
   var request = new XMLHttpRequest();
 
-  this.playerNumber = Number(window.location.search.split(/?[=&]/)[window.location.search.split(/[?=&]/).indexOf("player")]);
+  this.playerNumber = Number(window.location.search.split(/?[=&]/)[window.location.search.split(/[?=&]/).indexOf("player") + 1]);
   var presenter = this;
   request.addEventListener("load",
     function() { presenter.completeInitialization(request);} );
