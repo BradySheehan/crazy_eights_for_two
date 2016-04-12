@@ -26,7 +26,7 @@ function Presenter() {
   var request = new XMLHttpRequest();
 
   var params = window.location.search.split(/[?=&]/);
-  for (var i = 1; k < params.length; k += 2) {
+  for (var k = 1; k < params.length; k += 2) {
     if (params[k] == "player") {
        this.playerNumber = Number(params[k+1]);
     }
@@ -49,29 +49,29 @@ function Presenter() {
 Presenter.prototype.completeInitialization = function(request) {
   if(request.status == 200) {
 	  window.alert("In completeInitialization()");
-      var doc = request.responseXML;
-      var playerTurn = doc.getElementsByTagName("playerturn")[0].nodeValue;
-      var pileSuit = doc.getElementsByTagName("pile").getAttribute("suit");
-      var pileValue = doc.getElementsByTagName("pile").getAttribute("value");
-      var pileASuit = doc.getElementsByTagName("pile").getAttribute("asuit");
-      this.view.displayPileTopCard(new Card(pileSuit, pileValue));
-      this.pile.setAnnouncedSuit(pileASuit);
-      var cards = getElementsByTagName("cards");
-      var cardList = new Array();
-      var cardList2 = new Array();
-      for(Element e : cards.childNodes) {
-         cardList.push(new Card(e.getAttribute("suit"), e.getAttribute("value")));
-         cardList2.push(new Card("b", "jok"));
-         this.player1.add(new Card(e.getAttribute("suit"), e.getAttribute("value")));
-      }
-      this.view.displayHumanHand(cardList);
-      this.view.displayComputerHand(cardList2);
-      //extract data from XML and update model
-      //tell view to display extracted data
-      if(playerTurn != this.playerNum) { //not my turn
-         this.view.blockPlay(); //check this later!
-         var id = window.setInterval("pollHandler(request, id)", 1500);
-      }
+    var doc = request.responseXML;
+    var playerTurn = doc.getElementsByTagName("playerturn")[0].nodeValue;
+    var pileSuit = doc.getElementsByTagName("pile").getAttribute("suit");
+    var pileValue = doc.getElementsByTagName("pile").getAttribute("value");
+    var pileASuit = doc.getElementsByTagName("pile").getAttribute("asuit");
+    this.view.displayPileTopCard(new Card(pileSuit, pileValue));
+    this.pile.setAnnouncedSuit(pileASuit);
+    var cards = getElementsByTagName("cards");
+    var cardList = new Array();
+    var cardList2 = new Array();
+    for(var i = 0; i < cards[0].childNodes.length; i++) {
+       cardList.push(new Card(cards[0].childNodes[i].getAttribute("suit"), cards[0].childNodes[i].getAttribute("value")));
+       cardList2.push(new Card("b", "jok"));
+       this.player1.add(new Card(cards[0].childNodes[i].getAttribute("suit"), cards[0].childNodes[i].getAttribute("value")));
+    }
+    this.view.displayHumanHand(cardList);
+    this.view.displayComputerHand(cardList2);
+    //extract data from XML and update model
+    //tell view to display extracted data
+    if(playerTurn != this.playerNum) { //not my turn
+       this.view.blockPlay(); //check this later!
+       var id = window.setInterval("pollHandler(request, id)", 1500);
+    }
   }
 }
 
