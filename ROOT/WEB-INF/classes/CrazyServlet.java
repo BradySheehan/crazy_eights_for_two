@@ -104,7 +104,7 @@ public class CrazyServlet extends HttpServlet {
     public Document newPollXMLDoc(Game game1, HttpServletRequest request) {
          Pile pile = game1.getPile();
          int playerNum = game1.getNextPlayer();
-         int currentPlayer = Integer.parseInt(request.getParameter("player"));
+         int currentPlayer = (int)Integer.valueOf(request.getParameter("player"));
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
   	     DocumentBuilder dBuilder = null;
 		  try {
