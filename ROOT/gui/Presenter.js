@@ -24,7 +24,8 @@ function Presenter() {
   this.view.setSuitListener(this.setSuit);
 
   var request = new XMLHttpRequest();
-  this.playerNumber = Number(window.location.search.split(/?=&/)[window.location.search.split(/[?=&]/).indexOf("player")]);
+
+  this.playerNumber = Number(window.location.search.split(/?[=&]/)[window.location.search.split(/[?=&]/).indexOf("player")]);
   var presenter = this;
   request.addEventListener("load",
     function() { presenter.completeInitialization(request);} );
@@ -75,9 +76,7 @@ Presenter.prototype.completeInitialization = function(request) {
  * before the computer is given a turn.
  */
 Presenter.prototype.pickCard = function() {
-    this.human.list.push(this.deck.dealACard());
-    this.view.displayHumanHand(this.human.getHandCopy());
-    this.completeUserPlay();
+    drawCardHandler();
 };
 
 /**
