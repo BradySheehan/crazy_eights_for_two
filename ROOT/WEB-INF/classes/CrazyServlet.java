@@ -67,7 +67,7 @@ public class CrazyServlet extends HttpServlet {
       //assume we have XML doc with card played?
       //remove card from hand, add card to pile, toggle turn, return empty doc
       Card card1 = new Card(request.getParameter("suit"), request.getParameter("value")); // getCardFromXMLDoc();
-      game1.getThisPlayer((int)(request.getParameter("player"))).remove(card1);
+      game1.getThisPlayer(Integer.parseInt(request.getParameter("player"))).remove(card1);
       game1.getPile().acceptACard(card1);
       game1.toggleTurn();
       pw = response.getWriter();
@@ -102,8 +102,8 @@ public class CrazyServlet extends HttpServlet {
     }
 
     public Document newPollXMLDoc(Game game1, HttpServletRequest request) {
-         Pile pile = game1.pile;
-         int playerNum = game1.nextPlayer();
+         Pile pile = game1.getPile();
+         int playerNum = game1.getNextPlayer();
          int currentPlayer = Integer.parseInt(request.getParameter("player"));
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
   	     DocumentBuilder dBuilder = null;
@@ -121,20 +121,22 @@ public class CrazyServlet extends HttpServlet {
         playerTurn.appendChild(doc.createTextNode(String.valueOf(playerNum)));
 
         Element opponentCards = doc.createElement("opponentCards");
-        opponentCards.appendChild(doc.createTextNode(String.valueOf(game1.getOtherPlayer[currentPlayer].getNCards())));
+        opponentCards.appendChild(doc.createTextNode(String.valueOf(game1.getOtherPlayer(currentPlayer).getNCards())));
         Element pile1 = doc.createElement("pile");
         pile1.setAttribute("suit", pile.getTopCard().getSuit());
         pile1.setAttribute("value", pile.getTopCard().getValue());
         pile1.setAttribute("asuit", pile.getAnnouncedSuit());
 
         Element cards = doc.createElement("cards");
-
-        for(Card c1:hand) {
+        Iterator<Card> it = game1.getThisPlayer(playerNum).getCardIterator();
+        while(it.hasNext()) { //not sure about this.
+            Card c1 = it.next();
             Element card = doc.createElement("card");
             card.setAttribute("suit", c1.getSuit());
             card.setAttribute("value", c1.getValue());
             cards.appendChild(card);
         }
+
         return doc;
     }
 

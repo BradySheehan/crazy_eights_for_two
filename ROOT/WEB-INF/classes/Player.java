@@ -50,15 +50,15 @@ public class Player {
      * Find card with given string representation in this hand.
      */
     public Card find(String cardString) {
-	int i = 0;
-	Card card = null;
-	while (i<this.list.size() && card == null) {
-	    if (this.list.get(i).toString().equals(cardString)) {
-		card = this.list.get(i);
-	    }
-	    i++;
-	}
-	return card;
+    	int i = 0;
+    	Card card = null;
+    	while (i<this.list.size() && card == null) {
+    	    if (this.list.get(i).toString().equals(cardString)) {
+    		card = this.list.get(i);
+    	    }
+    	    i++;
+    	}
+	    return card;
     }
 
     public int getNCards() {
