@@ -38,12 +38,6 @@ function Presenter() {
   request.open("POST", "/CrazyServlet", true);
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   request.send("type=poll"); //query string
-
-    // Display initial situation
-    // the intial situation won't be displayed until both players are joined?
-  this.view.displayComputerHand(this.computer.getHandCopy());
-  this.view.displayPileTopCard(this.pile.getTopCard());
-  this.view.displayHumanHand(this.human.getHandCopy());
 }
 
 Presenter.prototype.completeInitialization = function(request) {
@@ -152,8 +146,8 @@ Presenter.prototype.completeUserPlay = function()
 
 
 };
-
-Presenter.prototype.playCardHandler = function(Card c) {
+//accepts a card c
+Presenter.prototype.playCardHandler = function(c) {
       var request = new XMLHttpRequest();
       request.setRequestHeader("type", "play");
       request.send("/CrazyServlet/?player="+this.playerNum+"suit=" + c.getSuit() + "&value=" + c.getValue());
@@ -183,8 +177,8 @@ Presenter.prototype.pollHandler = function(request, intervalId) {
          var cards = getElementsByTagName("cards");
          var cardList = new Array();
          var cardList2 = new Array();
-         for(Element e : cards.childNodes) {
-            cardList.push(new Card(e.getAttribute("suit"), e.getAttribute("value")));
+         for(var i = 0; i < cards[0].childNodes.length; i++) {
+            cardList.push(new Card(cards[0].childNodes[i].getAttribute("suit"), cards[0].childNodes[i].getAttribute("value")));
          }
          for(var i = 0; i < numOpponentCards; i++) {
             cardList2.push(new Card("b", "jok"));
