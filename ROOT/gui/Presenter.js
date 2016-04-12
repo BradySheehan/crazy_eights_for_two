@@ -25,7 +25,13 @@ function Presenter() {
 
   var request = new XMLHttpRequest();
 
-  this.playerNumber = Number(window.location.search.split(/?[=&]/)[window.location.search.split(/[?=&]/).indexOf("player") + 1]);
+  var params = window.location.search.split(/[?=&]/);
+  for (var i = 1; k < params.length; k += 2) {
+    if (params[k] == "player") {
+       this.playerNumber = Number(params[k+1]);
+    }
+  }
+
   var presenter = this;
   request.addEventListener("load",
     function() { presenter.completeInitialization(request);} );
