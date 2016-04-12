@@ -184,6 +184,8 @@ View.prototype.addImageHelper = function(card, aDiv, URL, listener) {
 };
 
 /**
+ *
+ * Add code for preventing clicking (stop propagation view listener on body stuff)
  * Change display when user is waiting for opponent to play.
  */
 View.prototype.blockPlay = function() {

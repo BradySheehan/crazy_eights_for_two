@@ -118,17 +118,21 @@ public class CrazyServlet extends HttpServlet {
         doc.appendChild(root);
 
         Element playerTurn = doc.createElement("playerturn");
-        playerTurn.appendChild(doc.createTextNode(String.valueOf(playerNum)));
+        playerTurn.setTextContent(String.valueOf(playerNum));
+        root.appendChild(playerTurn);
 
         Element opponentCards = doc.createElement("opponentCards");
         opponentCards.appendChild(doc.createTextNode(String.valueOf(game1.getOtherPlayer(currentPlayer).getNCards())));
+        root.appendChild(opponentCards);
+
         Element pile1 = doc.createElement("pile");
         pile1.setAttribute("suit", pile.getTopCard().getSuit());
         pile1.setAttribute("value", pile.getTopCard().getValue());
         pile1.setAttribute("asuit", pile.getAnnouncedSuit());
+        root.appendChild(pile1);
 
         Element cards = doc.createElement("cards");
-        Iterator<Card> it = game1.getThisPlayer(playerNum).getCardIterator();
+        Iterator<Card> it = game1.getThisPlayer(currentPlayer).getCardIterator();
         while(it.hasNext()) { //not sure about this.
             Card c1 = it.next();
             Element card = doc.createElement("card");
@@ -136,6 +140,7 @@ public class CrazyServlet extends HttpServlet {
             card.setAttribute("value", c1.getValue());
             cards.appendChild(card);
         }
+        root.appendChild(cards);
 
         return doc;
     }

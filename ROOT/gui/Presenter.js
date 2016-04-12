@@ -37,26 +37,31 @@ function Presenter() {
     function() { presenter.completeInitialization(request);} );
   request.open("POST", "/CrazyServlet", true);
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-  request.send("type=poll"); //query string
+  request.send("type=poll&player="+this.playerNumber); //query string
 }
 
 Presenter.prototype.completeInitialization = function(request) {
   if(request.status == 200) {
 	  window.alert("In completeInitialization()");
     var doc = request.responseXML;
-    var playerTurn = doc.getElementsByTagName("playerturn")[0].nodeValue;
-    var pileSuit = doc.getElementsByTagName("pile").getAttribute("suit");
-    var pileValue = doc.getElementsByTagName("pile").getAttribute("value");
-    var pileASuit = doc.getElementsByTagName("pile").getAttribute("asuit");
-    this.view.displayPileTopCard(new Card(pileSuit, pileValue));
-    this.pile.setAnnouncedSuit(pileASuit);
-    var cards = getElementsByTagName("cards");
+    var playerTurn = doc.getElementsByTagName("playerturn")[0].childNodes[0].nodeValue;
+    var pileSuit = doc.getElementsByTagName("pile")[0].getAttribute("suit");
+    var pileValue = doc.getElementsByTagName("pile")[0].getAttribute("value");
+    var pileASuit = doc.getElementsByTagName("pile")[0].getAttribute("asuit");
+    if(playerTurn != 1) {
+      this.view.displayPileTopCard(new Card(pileSuit, pileValue));
+      this.pile.setAnnouncedSuit(pileASuit);
+    } else {
+      this.view.displayPileTopCard(this.pile.getTopCard());
+      this.pile.setAnnouncedSuit(this.pile.announcedSuit);
+    }
+    var cards = doc.getElementsByTagName("cards")[0];
     var cardList = new Array();
     var cardList2 = new Array();
-    for(var i = 0; i < cards[0].childNodes.length; i++) {
-       cardList.push(new Card(cards[0].childNodes[i].getAttribute("suit"), cards[0].childNodes[i].getAttribute("value")));
+    for(var i = 0; i < cards.childNodes.length; i++) {
+       cardList.push(new Card(cards.childNodes[i].getAttribute("suit"), cards.childNodes[i].getAttribute("value")));
        cardList2.push(new Card("b", "jok"));
-       this.player1.add(new Card(cards[0].childNodes[i].getAttribute("suit"), cards[0].childNodes[i].getAttribute("value")));
+       this.player1.add(new Card(cards.childNodes[i].getAttribute("suit"), cards.childNodes[i].getAttribute("value")));
     }
     this.view.displayHumanHand(cardList);
     this.view.displayComputerHand(cardList2);
