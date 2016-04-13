@@ -74,7 +74,7 @@ Presenter.prototype.completeInitialization = function(request) {
     //tell view to display extracted data
     if(playerTurn != this.playerNumber) { //not my turn
        this.view.blockPlay(); //check this later!
-       var id = window.setInterval(this.pollHandler(request, id), 1500);
+       var id = window.setInterval(this.poll(request, id), 1500);
     }
   }
 };
@@ -86,7 +86,7 @@ Presenter.prototype.completeInitialization = function(request) {
  * before the computer is given a turn.
  */
 Presenter.prototype.pickCard = function() {
-    this.drawCardHandler();
+    this.drawCard();
 };
 
 /**
@@ -96,19 +96,16 @@ Presenter.prototype.pickCard = function() {
  * a suit.
  */
 Presenter.prototype.playCard = function(cardString) {
-
     // Alert user if illegal choice of card
+
     var card = this.player1.find(cardString);
     if (!this.pile.isValidToPlay(card)) {
       this.view.displayWrongCardMsg(cardString);
-    }
-
-    // Card is playable.  Remove from hand and add to discard pile.
-    // Then, if it's an eight, show the suit-picker.
-    // Either immediately (card played was not an 8) or after the player1
-    // picks a suit (card was an 8), continue to completeUserPlay() to check
-    // for win before turning play over to the computer.
-    else {
+    }else {
+      var request = new XMLHttpRequest();
+      request.open("POST", "/CrazyServlet", true);
+      request.setRequestHeader("type", "play");
+      request.send("/CrazyServlet/?type=play&player="+this.playerNum+"&suit=" + card.getSuit() + "&value=" + card.getValue());
       this.player1.remove(this.player1.indexOf(card));
       this.view.displayHumanHand(this.player1.getHandCopy());
       this.pile.acceptACard(card);
@@ -117,11 +114,12 @@ Presenter.prototype.playCard = function(cardString) {
         this.view.displaySuitPicker();
         // Execution continues at setSuit after user picks suit
       }
-
-      else {
-         this.playCardHandler(card);
-        // this.completeUserPlay();
-      }
+       if(this.player1.isHandEmpty()) {
+           this.view.announceHumanWinner();
+       } else {
+           this.view.blockPlay();
+           var id = window.setInterval(this.poll(request,id), 1500);
+       }
     }
 };
 
@@ -133,31 +131,13 @@ Presenter.prototype.playCard = function(cardString) {
 Presenter.prototype.setSuit = function(suit) {
   this.pile.setAnnouncedSuit(suit);
   this.view.undisplaySuitPicker();
-  this.completeUserPlay();
 };
 
 
-/**
- * Complete user play (possibly after suit picked)
- * by checking for win.  Display message if win,
- * otherwise allow computer to take a turn.
- */
-Presenter.prototype.completeUserPlay = function() {
-    // Are you done?
-    if (this.player1.isHandEmpty()) {
-      this.view.announceHumanWinner();
-    }
-
-    // If not, play my (computer) hand
-    // else {
-    //   this.playComputer();
-    // }
-
-
-};
 //accepts a card c
 Presenter.prototype.playCardHandler = function(c) {
       var request = new XMLHttpRequest();
+      request.open("POST", "/CrazyServlet", true);
       request.setRequestHeader("type", "play");
       request.send("/CrazyServlet/?player="+this.playerNum+"suit=" + c.getSuit() + "&value=" + c.getValue());
      if(this.player1.isHandEmpty()) {
@@ -167,9 +147,19 @@ Presenter.prototype.playCardHandler = function(c) {
      }
 };
 
-Presenter.prototype.pollHandler = function(request, intervalId) {
-  // request.open("POST", "/CrazyServlet", true);
+
+Presenter.prototype.poll = function(request, intervalId) {
+  var request = new XMLHttpRequest();
+  request.open("POST", "/CrazyServlet", true);
+  request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  var presenter = this;
+  request.addEventListener("load",
+    function() { presenter.pollHandler(request, intervalId);} );
   request.send("type=poll");
+};
+
+
+Presenter.prototype.pollHandler = function(request, intervalId) {
   var doc = request.responseXML;
   //parse doc
   if(this.playerNum != doc.getElementsByTagName("playerturn")[0].nodeValue) {
@@ -199,21 +189,23 @@ Presenter.prototype.pollHandler = function(request, intervalId) {
          this.view.unblockPlay();
       }
   }
-
 };
 
 Presenter.prototype.drawCardHandler = function(connection) {
-  connection.send("type=pick");
-  var id = window.setInterval(thisdrawCard(connection), 1500);
-  this.view.blockPlay();
-};
-
-Presenter.prototype.drawCard = function(connection) {
   var doc = connection.responseXML;
-
   var card = new Card(doc.getElementsByTagName("card")[0].getAttribute("suit"),doc.getElementsByTagName("card")[0].getAttribute("value"));
   this.player1.add(card);
   this.view.displayHumanHand(this.player1.getHandCopy());
   this.view.blockPlay();
-  var id = window.setInterval(this.pollHandler(connection,id), 1500);
+  var id = window.setInterval(this.poll(connection,id), 1500);
+};
+
+Presenter.prototype.drawCard = function() {
+  var request = new XMLHttpRequest();
+  request.open("POST", "/CrazyServlet", true);
+  request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  var presenter = this;
+  request.addEventListener("load",
+    function() { presenter.drawCardHandler(request);} );
+  request.send("type=pick");
 };
