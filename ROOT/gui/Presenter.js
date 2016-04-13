@@ -48,6 +48,9 @@ Presenter.prototype.completeInitialization = function(request) {
     var pileSuit = doc.getElementsByTagName("pile")[0].getAttribute("suit");
     var pileValue = doc.getElementsByTagName("pile")[0].getAttribute("value");
     var pileASuit = doc.getElementsByTagName("pile")[0].getAttribute("asuit");
+
+    //shouldn't need to do a check since the java code manages the topcard of the
+    //pile for us
     if(playerTurn != 1) {
       this.pile.acceptACard(new Card(pileSuit, pileValue));
       this.view.displayPileTopCard(new Card(pileSuit, pileValue));
