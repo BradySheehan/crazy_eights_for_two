@@ -73,7 +73,7 @@ Presenter.prototype.completeInitialization = function(request) {
     //tell view to display extracted data
     if(playerTurn != this.playerNumber) { //not my turn
        this.view.blockPlay(); //check this later!
-       var id = window.setInterval(this.poll(request, id), 1500);
+       var id = window.setInterval(this.poll(id), 1500);
     }
   }
 };
@@ -117,7 +117,7 @@ Presenter.prototype.playCard = function(cardString) {
            this.view.announceHumanWinner();
        } else {
            this.view.blockPlay();
-           var id = window.setInterval(this.poll(request,id), 1500);
+           var id = window.setInterval(this.poll(id), 1500);
        }
     }
 };
@@ -147,7 +147,8 @@ Presenter.prototype.playCardHandler = function(c) {
 };
 
 
-Presenter.prototype.poll = function(request, intervalId) {
+Presenter.prototype.poll = function(intervalId) {
+  var request = new XMLHttpRequest();
   request.open("POST", "/CrazyServlet", true);
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   var presenter = this;

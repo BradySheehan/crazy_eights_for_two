@@ -63,44 +63,44 @@ public class CrazyServlet extends HttpServlet {
      if(session.isNew()) {
       doGet(request, response);
     } else if(request.getParameter("type").equals("play")) {
-     int gameIndex = (int)session.getAttribute("game");
-     Game game1 = games.get(gameIndex);
-      //assume we have XML doc with card played?
-      //remove card from hand, add card to pile, toggle turn, return empty doc
-      Card card1 = new Card(request.getParameter("suit"), request.getParameter("value")); // getCardFromXMLDoc();
-      game1.getThisPlayer(Integer.parseInt(request.getParameter("player"))).remove(card1);
-      game1.getPile().acceptACard(card1);
-      game1.toggleTurn();
-      pw = response.getWriter();
-      doc = emptyDoc();
-      try {
-        transformer.transform(new DOMSource(doc), new StreamResult(pw));
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
+       int gameIndex = (int)session.getAttribute("game");
+       Game game1 = games.get(gameIndex);
+        //assume we have XML doc with card played?
+        //remove card from hand, add card to pile, toggle turn, return empty doc
+        Card card1 = new Card(request.getParameter("suit"), request.getParameter("value")); // getCardFromXMLDoc();
+        game1.getThisPlayer(Integer.parseInt(request.getParameter("player"))).remove(card1);
+        game1.getPile().acceptACard(card1);
+        game1.toggleTurn();
+        pw = response.getWriter();
+        doc = emptyDoc();
+        try {
+          transformer.transform(new DOMSource(doc), new StreamResult(pw));
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
     } else if(request.getParameter("type").equals("pick")) {
-      Game game1 = games.get((int)session.getAttribute("game"));
-      Card card1 = game1.getDeck().dealACard();
-      game1.addCard(Integer.parseInt(request.getParameter("player")), card1);
-      game1.toggleTurn();
-      pw = response.getWriter();
-      doc = topCardFromDeckAsXMLDoc(game1.getDeck().dealACard());
-      try {
-        transformer.transform(new DOMSource(doc), new StreamResult(pw));
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
+        Game game1 = games.get((int)session.getAttribute("game"));
+        Card card1 = game1.getDeck().dealACard();
+        game1.addCard(Integer.parseInt(request.getParameter("player")), card1);
+        game1.toggleTurn();
+        pw = response.getWriter();
+        doc = topCardFromDeckAsXMLDoc(game1.getDeck().dealACard());
+        try {
+          transformer.transform(new DOMSource(doc), new StreamResult(pw));
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
     } else if(request.getParameter("type").equals("poll")) {
-      Game game1 = games.get((int)session.getAttribute("game"));
-      pw = response.getWriter();
-      doc = newPollXMLDoc(game1, request);
-      try {
-       transformer.transform(new DOMSource(doc), new StreamResult(pw));
-     } catch (Exception e) {
-       e.printStackTrace();
-     }
-   }
+        Game game1 = games.get((int)session.getAttribute("game"));
+        pw = response.getWriter();
+        doc = newPollXMLDoc(game1, request);
+        try {
+         transformer.transform(new DOMSource(doc), new StreamResult(pw));
+       } catch (Exception e) {
+         e.printStackTrace();
+       }
     }
+  }
 
     public Document newPollXMLDoc(Game game1, HttpServletRequest request) {
          Pile pile = game1.getPile();
