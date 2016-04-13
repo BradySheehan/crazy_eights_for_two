@@ -1,10 +1,9 @@
 "use strict";
 
 /**
- * Play the game Crazy Eights.
- * The computer player in this version always draws a card.
- * If the deck runs out, the program will throw an exception and terminate.
+ * Play the game Crazy Eights. File that works with two player crazy eights
  */
+
 function Presenter() {
   /**
    * Initialize game by creating and shuffling the deck,
@@ -149,7 +148,6 @@ Presenter.prototype.playCardHandler = function(c) {
 
 
 Presenter.prototype.poll = function(request, intervalId) {
-  var request = new XMLHttpRequest();
   request.open("POST", "/CrazyServlet", true);
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   var presenter = this;
@@ -161,7 +159,6 @@ Presenter.prototype.poll = function(request, intervalId) {
 
 Presenter.prototype.pollHandler = function(request, intervalId) {
   var doc = request.responseXML;
-  //parse doc
   if(this.playerNum != doc.getElementsByTagName("playerturn")[0].nodeValue) {
       window.clearInterval(intervalId);
       var playerTurn = doc.getElementsByTagName("playerturn")[0].nodeValue;
