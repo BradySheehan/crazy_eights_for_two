@@ -137,8 +137,7 @@ Presenter.prototype.setSuit = function(suit) {
  * by checking for win.  Display message if win,
  * otherwise allow computer to take a turn.
  */
-Presenter.prototype.completeUserPlay = function()
-{
+Presenter.prototype.completeUserPlay = function() {
     // Are you done?
     if (this.player1.isHandEmpty()) {
       this.view.announceHumanWinner();
@@ -196,13 +195,13 @@ Presenter.prototype.pollHandler = function(request, intervalId) {
 
 };
 
-Presenter.prototype.drawCardHandler = function(connection){
+Presenter.prototype.drawCardHandler = function(connection) {
   connection.send("type=pick");
   var id = window.setInterval("drawCard(connection)", 1500);
   this.view.blockPlay();
 };
 
-Presenter.prototype.drawCard = function(connection){
+Presenter.prototype.drawCard = function(connection) {
   var doc = connection.responseXML;
 
   var card = new Card(doc.getElementsByTagName("card")[0].getAttribute("suit"),doc.getElementsByTagName("card")[0].getAttribute("value"));

@@ -183,6 +183,19 @@ View.prototype.addImageHelper = function(card, aDiv, URL, listener) {
   }
 };
 
+View.prototype.setBodyListener = function(){
+   var body = document.getElementsByTagName("body")[0];
+   var stopEventListener = function(event) {
+    event.stopPropagation();
+   }
+  body.addEventListener("click", stopEventListener, true)
+};
+
+View.prototype.removeBodyListener = function() {
+   var body = document.getElementsByTagName("body")[0];
+   body.removeEventListener("click", stopEventListener);
+}
+
 /**
  *
  * Add code for preventing clicking (stop propagation view listener on body stuff)
@@ -193,6 +206,7 @@ View.prototype.blockPlay = function() {
   div.style.display="block";
   var myHand = document.getElementById("myHand");
   myHand.style.setProperty("opacity", 0.5);
+  setBodyLisener();
 };
 
 /**
@@ -203,4 +217,5 @@ View.prototype.unblockPlay = function() {
   div.style.display="none";
   var myHand = document.getElementById("myHand");
   myHand.style.setProperty("opacity", 1);
+  removeBodyListener();
 };
