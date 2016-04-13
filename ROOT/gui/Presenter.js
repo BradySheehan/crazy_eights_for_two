@@ -34,9 +34,9 @@ function Presenter() {
   }
 
   var presenter = this;
+  request.open("POST", "/CrazyServlet", true);
   request.addEventListener("load",
     function() { presenter.completeInitialization(request);} );
-  request.open("POST", "/CrazyServlet", true);
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   request.send("type=poll&player="+this.playerNumber); //query string
 }
@@ -74,10 +74,10 @@ Presenter.prototype.completeInitialization = function(request) {
     //tell view to display extracted data
     if(playerTurn != this.playerNumber) { //not my turn
        this.view.blockPlay(); //check this later!
-       var id = window.setInterval("this.pollHandler(request, id)", 1500);
+       var id = window.setInterval(this.pollHandler(request, id), 1500);
     }
   }
-}
+};
 
 /**
  * Event: User wants card from the deck.
@@ -168,10 +168,11 @@ Presenter.prototype.playCardHandler = function(c) {
 };
 
 Presenter.prototype.pollHandler = function(request, intervalId) {
+  // request.open("POST", "/CrazyServlet", true);
   request.send("type=poll");
   var doc = request.responseXML;
   //parse doc
-  if(this.playerNum == doc.getElementsByTagName("playernum")[0].nodeValue) {
+  if(this.playerNum != doc.getElementsByTagName("playerturn")[0].nodeValue) {
       window.clearInterval(intervalId);
       var playerTurn = doc.getElementsByTagName("playerturn")[0].nodeValue;
       var pileSuit = doc.getElementsByTagName("pile").getAttribute("suit");
@@ -203,7 +204,7 @@ Presenter.prototype.pollHandler = function(request, intervalId) {
 
 Presenter.prototype.drawCardHandler = function(connection) {
   connection.send("type=pick");
-  var id = window.setInterval("drawCard(connection)", 1500);
+  var id = window.setInterval(thisdrawCard(connection), 1500);
   this.view.blockPlay();
 };
 
@@ -214,5 +215,5 @@ Presenter.prototype.drawCard = function(connection) {
   this.player1.add(card);
   this.view.displayHumanHand(this.player1.getHandCopy());
   this.view.blockPlay();
-  var id = window.setInterval("pollHandler(connection,id)", 1500);
+  var id = window.setInterval(this.pollHandler(connection,id), 1500);
 };
