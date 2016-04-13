@@ -51,14 +51,22 @@ Presenter.prototype.completeInitialization = function(request) {
 
     //shouldn't need to do a check since the java code manages the topcard of the
     //pile for us
-    if(playerTurn != 1) {
+    // if(playerTurn != 1) {
+    //   window.alert("not player one \n displaying card " + new Card(pileSuit, pileValue));
+    //   this.pile.acceptACard(new Card(pileSuit, pileValue));
+    //   this.view.displayPileTopCard(new Card(pileSuit, pileValue));
+    //   this.pile.setAnnouncedSuit(pileASuit);
+    // } else {
+    //   window.alert("player one \n displaying card " + this.pile.getTopCard());
+    //   this.view.displayPileTopCard(this.pile.getTopCard());
+    //   this.pile.setAnnouncedSuit(this.pile.announcedSuit);
+    // }
+      window.alert("not player one \n displaying card " + new Card(pileSuit, pileValue));
       this.pile.acceptACard(new Card(pileSuit, pileValue));
       this.view.displayPileTopCard(new Card(pileSuit, pileValue));
       this.pile.setAnnouncedSuit(pileASuit);
-    } else {
-      this.view.displayPileTopCard(this.pile.getTopCard());
-      this.pile.setAnnouncedSuit(this.pile.announcedSuit);
-    }
+
+
     var cards = doc.getElementsByTagName("cards")[0];
     var cardList = new Array();
     var cardList2 = new Array();
