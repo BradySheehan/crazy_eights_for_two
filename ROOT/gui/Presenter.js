@@ -49,6 +49,7 @@ Presenter.prototype.completeInitialization = function(request) {
     var pileValue = doc.getElementsByTagName("pile")[0].getAttribute("value");
     var pileASuit = doc.getElementsByTagName("pile")[0].getAttribute("asuit");
     if(playerTurn != 1) {
+      this.pile.acceptACard(new Card(pileSuit, pileValue));
       this.view.displayPileTopCard(new Card(pileSuit, pileValue));
       this.pile.setAnnouncedSuit(pileASuit);
     } else {
@@ -69,7 +70,7 @@ Presenter.prototype.completeInitialization = function(request) {
     //tell view to display extracted data
     if(playerTurn != this.playerNum) { //not my turn
        this.view.blockPlay(); //check this later!
-       var id = window.setInterval("pollHandler(request, id)", 1500);
+       var id = window.setInterval("this.pollHandler(request, id)", 1500);
     }
   }
 }
@@ -81,7 +82,7 @@ Presenter.prototype.completeInitialization = function(request) {
  * before the computer is given a turn.
  */
 Presenter.prototype.pickCard = function() {
-    drawCardHandler();
+    this.drawCardHandler();
 };
 
 /**
@@ -114,7 +115,7 @@ Presenter.prototype.playCard = function(cardString) {
       }
 
       else {
-         playCardHandler(card);
+         this.playCardHandler(card);
         // this.completeUserPlay();
       }
     }
@@ -172,6 +173,7 @@ Presenter.prototype.pollHandler = function(request, intervalId) {
       var pileSuit = doc.getElementsByTagName("pile").getAttribute("suit");
       var pileValue = doc.getElementsByTagName("pile").getAttribute("value");
       var pileASuit = doc.getElementsByTagName("pile").getAttribute("asuit");
+      this.pile.AcceptACard(new Card(pileSuit, pileValue));
       this.view.displayPileTopCard(new Card(pileSuit, pileValue));
       this.pile.setAnnouncedSuit(pileASuit);
       var numOpponentCards = doc.getElementsByTagName("opponentcards")[0].nodeValue;

@@ -194,7 +194,7 @@ View.prototype.setBodyListener = function(){
 View.prototype.removeBodyListener = function() {
    var body = document.getElementsByTagName("body")[0];
    body.removeEventListener("click", stopEventListener);
-}
+};
 
 /**
  *
@@ -206,7 +206,7 @@ View.prototype.blockPlay = function() {
   div.style.display="block";
   var myHand = document.getElementById("myHand");
   myHand.style.setProperty("opacity", 0.5);
-  setBodyLisener();
+  this.setBodyListener();
 };
 
 /**
@@ -217,5 +217,5 @@ View.prototype.unblockPlay = function() {
   div.style.display="none";
   var myHand = document.getElementById("myHand");
   myHand.style.setProperty("opacity", 1);
-  removeBodyListener();
+  this.removeBodyListener();
 };
