@@ -88,7 +88,6 @@ View.prototype.displayPileTopCard = function(card) {
   tableDiv.replaceChild(newImg, tableDiv.childNodes[1]);
   newImg.setAttribute("src", card.getURL());
   newImg.setAttribute("alt", "Discard pile");
-  tableDiv.appendChild(newImg);
 };
 
 /**
