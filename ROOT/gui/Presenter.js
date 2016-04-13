@@ -22,13 +22,14 @@ function Presenter() {
   this.view.setDeckListener(this.pickCard);
   this.view.setCardListener(this.playCard);
   this.view.setSuitListener(this.setSuit);
-
+  this.playerNumber;
   var request = new XMLHttpRequest();
 
   var params = window.location.search.split(/[?=&]/);
   for (var k = 1; k < params.length; k += 2) {
     if (params[k] == "player") {
        this.playerNumber = Number(params[k+1]);
+       window.alert("playernumber = "+this.playerNumber);
     }
   }
 
@@ -51,17 +52,17 @@ Presenter.prototype.completeInitialization = function(request) {
 
     //shouldn't need to do a check since the java code manages the topcard of the
     //pile for us
-    // if(playerTurn != 1) {
-    //   window.alert("not player one \n displaying card " + new Card(pileSuit, pileValue));
+    if(playerTurn != 1) {
+      window.alert("not player one");
     //   this.pile.acceptACard(new Card(pileSuit, pileValue));
     //   this.view.displayPileTopCard(new Card(pileSuit, pileValue));
     //   this.pile.setAnnouncedSuit(pileASuit);
-    // } else {
+    }
     //   window.alert("player one \n displaying card " + this.pile.getTopCard());
     //   this.view.displayPileTopCard(this.pile.getTopCard());
     //   this.pile.setAnnouncedSuit(this.pile.announcedSuit);
     // }
-      window.alert("not player one \n displaying card " + new Card(pileSuit, pileValue));
+      window.alert("displaying card " + new Card(pileSuit, pileValue));
       this.pile.acceptACard(new Card(pileSuit, pileValue));
       this.view.displayPileTopCard(new Card(pileSuit, pileValue));
       this.pile.setAnnouncedSuit(pileASuit);
@@ -79,7 +80,7 @@ Presenter.prototype.completeInitialization = function(request) {
     this.view.displayComputerHand(cardList2);
     //extract data from XML and update model
     //tell view to display extracted data
-    if(playerTurn != this.playerNum) { //not my turn
+    if(playerTurn != this.playerNumber) { //not my turn
        this.view.blockPlay(); //check this later!
        var id = window.setInterval("this.pollHandler(request, id)", 1500);
     }
@@ -117,7 +118,7 @@ Presenter.prototype.playCard = function(cardString) {
     // for win before turning play over to the computer.
     else {
       this.player1.remove(this.player1.indexOf(card));
-      this.view.displayplayerHand(this.player1.getHandCopy());
+      this.view.displayHumanHand(this.player1.getHandCopy());
       this.pile.acceptACard(card);
       this.view.displayPileTopCard(card);
       if (this.pile.getTopCard().getValue() == "8") {

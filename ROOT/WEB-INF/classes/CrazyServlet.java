@@ -40,6 +40,7 @@ public class CrazyServlet extends HttpServlet {
             response.sendRedirect("../../gui/Crazy8.html?player=0");
         } else {
             //the second player has shown up
+            // games.get(games.size()-1).toggleTurn();
             session.setAttribute("game", games.size() - 1);
             response.sendRedirect("../../gui/Crazy8.html?player=1");
         }
@@ -104,7 +105,7 @@ public class CrazyServlet extends HttpServlet {
     public Document newPollXMLDoc(Game game1, HttpServletRequest request) {
          Pile pile = game1.getPile();
          int playerNum = game1.getNextPlayer();
-         int currentPlayer = (int)Integer.valueOf(request.getParameter("player"));
+         int currentPlayer = (int)Integer.valueOf(request.getParameter("player"));//this line still giving errors
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
   	     DocumentBuilder dBuilder = null;
 		  try {
@@ -118,7 +119,7 @@ public class CrazyServlet extends HttpServlet {
         doc.appendChild(root);
 
         Element playerTurn = doc.createElement("playerturn");
-        playerTurn.setTextContent(String.valueOf(playerNum));
+        playerTurn.setTextContent(String.valueOf(playerNum)); //value of the next player
         root.appendChild(playerTurn);
 
         Element opponentCards = doc.createElement("opponentCards");

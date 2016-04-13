@@ -7,7 +7,7 @@ public class Game {
    private Deck deck;
    private Pile pile;
    private Player[] player = new Player[2];
-   private int nextPlayer = 0; // Second player, #0, goes first.
+   private int nextPlayer = 1; // Second player, #0, goes first.
 
 /**
 * Initialize game by creating and shuffling the deck,
