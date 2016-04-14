@@ -29,7 +29,7 @@ public class CrazyServlet extends HttpServlet {
     int numPlayers = 0;
     ArrayList<Game> games = new ArrayList<Game>();
 
-    public void doGet (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public synchronized void doGet (HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         numPlayers++;
         PrintWriter pw = null;
@@ -46,7 +46,7 @@ public class CrazyServlet extends HttpServlet {
         }
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public synchronized void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
      HttpSession session = request.getSession();
      PrintWriter pw = null;
      Document doc = null;
@@ -106,6 +106,8 @@ public class CrazyServlet extends HttpServlet {
         Pile pile = game1.getPile();
         int playerNum = game1.getNextPlayer();
         int currentPlayer = Integer.parseInt(request.getParameter("player"));//this line still giving errors
+        System.out.println("current player = " + currentPlayer);
+        System.out.println(" playernum = " + playerNum);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
   	   DocumentBuilder dBuilder = null;
 		  try {
@@ -122,7 +124,7 @@ public class CrazyServlet extends HttpServlet {
         playerTurn.setTextContent(String.valueOf(playerNum)); //value of the next player
         root.appendChild(playerTurn);
 
-        Element opponentCards = doc.createElement("opponentCards");
+        Element opponentCards = doc.createElement("opponentcards");
         opponentCards.appendChild(doc.createTextNode(String.valueOf(game1.getOtherPlayer(currentPlayer).getNCards())));
         root.appendChild(opponentCards);
 
@@ -156,10 +158,12 @@ public class CrazyServlet extends HttpServlet {
 		  }
         Document doc = dBuilder.newDocument();
 
-        Element root = doc.createElement("card");
-        root.setAttribute("suit", c.getSuit());
-        root.setAttribute("value", c.getValue());
-        root.appendChild(root);
+        Element root =doc.createElement("game");
+        doc.appendChild(root);
+        Element card = doc.createElement("card");
+        card.setAttribute("suit", c.getSuit());
+        card.setAttribute("value", c.getValue());
+        root.appendChild(card);
     	 return doc;
     }
 

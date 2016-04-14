@@ -60,6 +60,7 @@ View.prototype.setSuitListener = function(suitListener) {
  * Hand is an array of Card's.
  */
 View.prototype.displayComputerHand = function(hand) {
+  window.alert("displaying computer hand");
   var myDiv = document.getElementById("myHand");
 
   // Hand has more cards than are displayed, so add some to display
@@ -194,6 +195,9 @@ View.prototype.setBodyListener = function(){
 
 View.prototype.removeBodyListener = function() {
    var body = document.getElementsByTagName("body")[0];
+   var stopEventListener = function(event) {
+    event.stopPropagation();
+   }
    body.removeEventListener("click", stopEventListener);
 };
 
@@ -203,6 +207,7 @@ View.prototype.removeBodyListener = function() {
  * Change display when user is waiting for opponent to play.
  */
 View.prototype.blockPlay = function() {
+  window.alert("blockplay");
   var div = document.getElementById("blocking");
   div.style.display="block";
   var myHand = document.getElementById("myHand");
@@ -214,6 +219,7 @@ View.prototype.blockPlay = function() {
  * Allow the user to play once their opponent has played.
  */
 View.prototype.unblockPlay = function() {
+  window.alert("unblockplay");
   var div = document.getElementById("blocking");
   div.style.display="none";
   var myHand = document.getElementById("myHand");
