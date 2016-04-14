@@ -22,8 +22,9 @@ function Presenter() {
   this.view.setCardListener(this.playCard);
   this.view.setSuitListener(this.setSuit);
   this.playerNumber;
-  var request = new XMLHttpRequest();
+  this.intervalId;
 
+  var request = new XMLHttpRequest();
   var params = window.location.search.split(/[?=&]/);
   for (var k = 1; k < params.length; k += 2) {
     if (params[k] == "player") {
@@ -42,22 +43,16 @@ function Presenter() {
 
 Presenter.prototype.completeInitialization = function(request) {
   if(request.status == 200) {
-	  window.alert("In completeInitialization()");
     var doc = request.responseXML;
     var playerTurn = doc.getElementsByTagName("playerturn")[0].childNodes[0].nodeValue;
     var pileSuit = doc.getElementsByTagName("pile")[0].getAttribute("suit");
     var pileValue = doc.getElementsByTagName("pile")[0].getAttribute("value");
     var pileASuit = doc.getElementsByTagName("pile")[0].getAttribute("asuit");
 
-    if(playerTurn != 1) {
-      window.alert("not player one");
-    }
-
-      window.alert("displaying card " + new Card(pileSuit, pileValue));
-      this.pile.acceptACard(new Card(pileSuit, pileValue));
-      this.view.displayPileTopCard(new Card(pileSuit, pileValue));
-      this.pile.setAnnouncedSuit(pileASuit);
-
+    window.alert("displaying card " + new Card(pileSuit, pileValue));
+    this.pile.acceptACard(new Card(pileSuit, pileValue));
+    this.view.displayPileTopCard(new Card(pileSuit, pileValue));
+    this.pile.setAnnouncedSuit(pileASuit);
 
     var cards = doc.getElementsByTagName("cards")[0];
     var cardList = new Array();
@@ -73,7 +68,7 @@ Presenter.prototype.completeInitialization = function(request) {
     //tell view to display extracted data
     if(playerTurn != this.playerNumber) { //not my turn
        this.view.blockPlay(); //check this later!
-       var id = window.setInterval(this.poll(id), 1500);
+       this.intervalId =window.setInterval(this.poll(), 1500);
     }
   }
 };
@@ -89,9 +84,8 @@ Presenter.prototype.pickCard = function() {
   request.open("POST", "/CrazyServlet", true);
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   var presenter = this;
-  request.addEventListener("load",
-    function() { presenter.pickCardHandler(request);} );
-  request.send("type=pick");
+  request.addEventListener("load", function() { presenter.pickCardHandler(request);} );
+  request.send("type=pick&player="+this.playerNumber);
 };
 
 /**
@@ -108,7 +102,9 @@ Presenter.prototype.playCard = function(cardString) {
       var request = new XMLHttpRequest();
       request.open("POST", "/CrazyServlet", true);
       request.setRequestHeader("type", "play");
-      request.send("/CrazyServlet/?type=play&player="+this.playerNum+"&suit=" + card.getSuit() + "&value=" + card.getValue());
+      var presenter = this;
+      request.addEventListener("load", function() { presenter.playCardHandler(card);} );
+      request.send("type=play&player="+this.playerNum+"&suit=" + card.getSuit() + "&value=" + card.getValue());
       this.player1.remove(this.player1.indexOf(card));
       this.view.displayHumanHand(this.player1.getHandCopy());
       this.pile.acceptACard(card);
@@ -120,7 +116,7 @@ Presenter.prototype.playCard = function(cardString) {
            this.view.announceHumanWinner();
        } else {
            this.view.blockPlay();
-           var id = window.setInterval(this.poll(id), 1500);
+           // this.intervalId = window.setInterval(this.poll(), 1500);
        }
     }
 };
@@ -137,11 +133,11 @@ Presenter.prototype.setSuit = function(suit) {
 
 
 //accepts a card c
-Presenter.prototype.playCardHandler = function(c) {
+Presenter.prototype.playCardHandler = function(card) {
       var request = new XMLHttpRequest();
       request.open("POST", "/CrazyServlet", true);
       request.setRequestHeader("type", "play");
-      request.send("/CrazyServlet/?player="+this.playerNum+"suit=" + c.getSuit() + "&value=" + c.getValue());
+      request.send("/CrazyServlet/?player="+this.playerNum+"&suit=" + card.getSuit() + "&value=" + card.getValue());
      if(this.player1.isHandEmpty()) {
          this.view.announceHumanWinner();
      } else {
@@ -150,21 +146,21 @@ Presenter.prototype.playCardHandler = function(c) {
 };
 
 
-Presenter.prototype.poll = function(intervalId) {
+Presenter.prototype.poll = function() {
   var request = new XMLHttpRequest();
   request.open("POST", "/CrazyServlet", true);
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   var presenter = this;
   request.addEventListener("load",
-    function() { presenter.pollHandler(request, intervalId);} );
-  request.send("type=poll");
+    function() { presenter.pollHandler(request);} );
+  request.send("type=poll&player="+this.playerNumber);
 };
 
 
-Presenter.prototype.pollHandler = function(request, intervalId) {
+Presenter.prototype.pollHandler = function(request) {
   var doc = request.responseXML;
   if(this.playerNum != doc.getElementsByTagName("playerturn")[0].nodeValue) {
-      window.clearInterval(intervalId);
+      window.clearInterval(this.intervalId);
       var playerTurn = doc.getElementsByTagName("playerturn")[0].nodeValue;
       var pileSuit = doc.getElementsByTagName("pile").getAttribute("suit");
       var pileValue = doc.getElementsByTagName("pile").getAttribute("value");
@@ -199,5 +195,5 @@ Presenter.prototype.pickCardHandler = function(connection) {
   this.player1.add(card);
   this.view.displayHumanHand(this.player1.getHandCopy());
   this.view.blockPlay();
-  var id = window.setInterval(this.poll(connection,id), 1500);
+  this.intervalId = window.setInterval(this.poll(), 1500);
 };

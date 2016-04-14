@@ -103,11 +103,11 @@ public class CrazyServlet extends HttpServlet {
   }
 
     public Document newPollXMLDoc(Game game1, HttpServletRequest request) {
-         Pile pile = game1.getPile();
-         int playerNum = game1.getNextPlayer();
-         int currentPlayer = (int)Integer.valueOf(request.getParameter("player"));//this line still giving errors
+        Pile pile = game1.getPile();
+        int playerNum = game1.getNextPlayer();
+        int currentPlayer = Integer.parseInt(request.getParameter("player"));//this line still giving errors
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-  	     DocumentBuilder dBuilder = null;
+  	   DocumentBuilder dBuilder = null;
 		  try {
 			  dBuilder = dbFactory.newDocumentBuilder();
 		  } catch (Exception e) {
