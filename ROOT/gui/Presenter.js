@@ -179,6 +179,8 @@ Presenter.prototype.pollHandler = function(request, intervalId) {
          for(var i = 0; i < cards[0].childNodes.length; i++) {
             cardList.push(new Card(cards[0].childNodes[i].getAttribute("suit"), cards[0].childNodes[i].getAttribute("value")));
          }
+         this.player1.list = cardList; //reset the players hand
+
          for(var i = 0; i < numOpponentCards; i++) {
             cardList2.push(new Card("b", "jok"));
          }
