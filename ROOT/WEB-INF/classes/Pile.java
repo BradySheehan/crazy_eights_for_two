@@ -8,7 +8,7 @@ public class Pile {
   private ArrayList<Card> list = new ArrayList<Card>();
   
   /** If an 8 is played, this is the announced suit preference. */
-  private String announcedSuit;
+  private String announcedSuit = "";
   
   public Pile() { }
   
