@@ -99,12 +99,6 @@ Presenter.prototype.playCard = function(cardString) {
     if (!this.pile.isValidToPlay(card)) {
       this.view.displayWrongCardMsg(cardString);// Alert user if illegal choice of card
     }else {
-      var request = new XMLHttpRequest();
-      request.open("POST", "/CrazyServlet", true);
-      request.setRequestHeader("type", "play");
-      var presenter = this;
-      request.addEventListener("load", function() { presenter.playCardHandler(card);} );
-      request.send("type=play&player="+this.playerNum+"&suit=" + card.getSuit() + "&value=" + card.getValue());
       this.player1.remove(this.player1.indexOf(card));
       this.view.displayHumanHand(this.player1.getHandCopy());
       this.pile.acceptACard(card);
@@ -112,12 +106,12 @@ Presenter.prototype.playCard = function(cardString) {
       if (this.pile.getTopCard().getValue() == "8") {
         this.view.displaySuitPicker();  // Execution continues at setSuit after user picks suit
       }
-       if(this.player1.isHandEmpty()) {
-           this.view.announceHumanWinner();
-       } else {
-           this.view.blockPlay();
-           // this.intervalId = window.setInterval(this.poll(), 1500);
-       }
+      var request = new XMLHttpRequest();
+      request.open("POST", "/CrazyServlet", true);
+      request.setRequestHeader("type", "play");
+      var presenter = this;
+      request.addEventListener("load", function() { presenter.playCardHandler();} );
+      request.send("type=play&player="+this.playerNum+"&suit=" + card.getSuit() + "&value=" + card.getValue());
     }
 };
 
@@ -133,15 +127,12 @@ Presenter.prototype.setSuit = function(suit) {
 
 
 //accepts a card c
-Presenter.prototype.playCardHandler = function(card) {
-      var request = new XMLHttpRequest();
-      request.open("POST", "/CrazyServlet", true);
-      request.setRequestHeader("type", "play");
-      request.send("/CrazyServlet/?player="+this.playerNum+"&suit=" + card.getSuit() + "&value=" + card.getValue());
+Presenter.prototype.playCardHandler = function() {
      if(this.player1.isHandEmpty()) {
          this.view.announceHumanWinner();
      } else {
          this.view.blockPlay();
+         this.intervalId = window.setInterval(this.poll(), 1500);
      }
 };
 
