@@ -162,7 +162,6 @@ Presenter.prototype.setSuit = function(suit) {
   var presenter = this;
   request.addEventListener("load", function() { presenter.playCardHandler();} );
   request.send("type=play&player="+this.playerNumber+"&suit=" + suit + "&value=8");
-  window.alert("play data sending in progress...");
 };
 
 
