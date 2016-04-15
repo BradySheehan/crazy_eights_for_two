@@ -60,21 +60,28 @@ View.prototype.setSuitListener = function(suitListener) {
  * Hand is an array of Card's.
  */
 View.prototype.displayComputerHand = function(hand) {
-  window.alert("displaying computer hand");
   var myDiv = document.getElementById("myHand");
 
+  while (myDiv.childNodes.length > 0) {
+    // this.yourDiv.childNodes[0].style.display = "none";
+    myDiv.removeChild(myDiv.childNodes[0]);
+  }
+  for (var i=0; i<hand.length; i++) {
+    this.addBackCardImage(hand[i], myDiv);
+  }
+
   // Hand has more cards than are displayed, so add some to display
-  if (hand.length > myDiv.childNodes.length) {
-    for (var i=myDiv.childNodes.length; i<hand.length; i++) {
-      this.addBackCardImage(hand[i],myDiv);
-    }
-  }
-  // Hand has fewer than are displayed, so remove some from display.
-  else {
-    while (hand.length < myDiv.childNodes.length) {
-      myDiv.removeChild(myDiv.childNodes[myDiv.childNodes.length-1]);
-    }
-  }
+  // if (hand.length > myDiv.childNodes.length) {
+  //   for (var i=myDiv.childNodes.length; i<hand.length; i++) {
+  //     this.addBackCardImage(hand[i],myDiv);
+  //   }
+  // }
+  // // Hand has fewer than are displayed, so remove some from display.
+  // else {
+  //   while (hand.length < myDiv.childNodes.length) {
+  //     myDiv.removeChild(myDiv.childNodes[myDiv.childNodes.length-1]);
+  //   }
+  // }
 };
 
 
@@ -190,7 +197,7 @@ View.prototype.setBodyListener = function(){
    var stopEventListener = function(event) {
     event.stopPropagation();
    }
-  body.addEventListener("click", stopEventListener, true)
+  body.addEventListener("click", stopEventListener, false)
 };
 
 View.prototype.removeBodyListener = function() {
@@ -198,7 +205,8 @@ View.prototype.removeBodyListener = function() {
    var stopEventListener = function(event) {
     event.stopPropagation();
    }
-   body.removeEventListener("click", stopEventListener);
+   window.alert("removing body listener\n body = " + body);
+   body.removeEventListener("click", stopEventListener, false);
 };
 
 /**

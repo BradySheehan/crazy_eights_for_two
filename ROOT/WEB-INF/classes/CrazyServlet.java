@@ -67,9 +67,14 @@ public class CrazyServlet extends HttpServlet {
        Game game1 = games.get(gameIndex);
         //assume we have XML doc with card played?
         //remove card from hand, add card to pile, toggle turn, return empty doc
-        Card card1 = new Card(request.getParameter("suit"), request.getParameter("value")); // getCardFromXMLDoc();
+        Card card1 = game1.getThisPlayer(Integer.parseInt(request.getParameter("player"))).find(String.valueOf(request.getParameter("value"))+String.valueOf(request.getParameter("suit")));
+        // Card card1 = new Card(request.getParameter("suit"), request.getParameter("value")); // getCardFromXMLDoc();
         game1.getThisPlayer(Integer.parseInt(request.getParameter("player"))).remove(card1);
         game1.getPile().acceptACard(card1);
+        if(card1.getValue().equals("8")) {
+          game1.getPile().setAnnouncedSuit(card1.getSuit());
+        }
+        // game1.playCard(Integer.parseInt(request.getParameter("player")), String.valueOf(request.getParameter("suit")), String.valueOf(request.getParameter("value")), String.valueOf(request.getParameter("suit")));
         game1.toggleTurn();
         pw = response.getWriter();
         doc = emptyDoc();
@@ -125,7 +130,9 @@ public class CrazyServlet extends HttpServlet {
         root.appendChild(playerTurn);
 
         Element opponentCards = doc.createElement("opponentcards");
-        opponentCards.appendChild(doc.createTextNode(String.valueOf(game1.getOtherPlayer(currentPlayer).getNCards())));
+        Player otherPlayer = game1.getOtherPlayer(currentPlayer);
+        int numberOfCards = otherPlayer.getNCards();
+        opponentCards.appendChild(doc.createTextNode(String.valueOf(numberOfCards)));
         root.appendChild(opponentCards);
 
         Element pile1 = doc.createElement("pile");

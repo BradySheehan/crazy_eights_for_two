@@ -38,12 +38,18 @@ public class Player {
    * this player's hand.
    */
     public void remove(int i) {
-	list.remove(i);
+	     list.remove(i);
     }
 
     /** Remove the given card from the player's hand. */
     public void remove(Card card) {
-	list.remove(card);
+      // for(int i = 0; i < list.size(); i++) {
+      //   if (list.get(i).getValue().equals(card.getValue()) && list.get(i).getSuit().equals(card.getSuit())) {
+      //     list.remove(i);
+      //     break;
+      //   }
+      // }
+	    list.remove(card);
     }
 
     /**
@@ -62,7 +68,7 @@ public class Player {
     }
 
     public int getNCards() {
-	return list.size();
+	   return list.size();
     }
     public Iterator<Card> getCardIterator() {
 	return list.iterator();
