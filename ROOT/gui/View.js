@@ -19,7 +19,7 @@ View.prototype.setDeckListener = function(deckListener) {
 
   var deckImg = document.getElementById("deck");
   deckImg.addEventListener("click", deckClickHandler, false);
-}
+};
 
 /**
  * Remember the click listener for human's cards.
@@ -32,7 +32,7 @@ View.prototype.setCardListener = function(cardListener) {
     var cardString = event.target.getAttribute("alt");
     cardListener.call(presenter, cardString);
   };
-}
+};
 
 /**
  * Set the click listeners on the suit picker images.
@@ -52,7 +52,7 @@ View.prototype.setSuitListener = function(suitListener) {
   pickImg.addEventListener("click", suitClickHandler, false);
   pickImg = document.getElementById("spades");
   pickImg.addEventListener("click", suitClickHandler, false);
-}
+};
 
 
 /**
@@ -215,7 +215,6 @@ View.prototype.removeBodyListener = function() {
  * Change display when user is waiting for opponent to play.
  */
 View.prototype.blockPlay = function() {
-  window.alert("blockplay");
   var div = document.getElementById("blocking");
   div.style.display="block";
   var myHand = document.getElementById("myHand");
@@ -227,7 +226,6 @@ View.prototype.blockPlay = function() {
  * Allow the user to play once their opponent has played.
  */
 View.prototype.unblockPlay = function() {
-  window.alert("unblockplay");
   var div = document.getElementById("blocking");
   div.style.display="none";
   var myHand = document.getElementById("myHand");

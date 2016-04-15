@@ -40,9 +40,9 @@ public class Deck {
    */
   public Card dealACard() {
       if (list.size() == 0) {
-	  list = pile.removeAllButTop();
-	  shuffle();
-      }       
+    	  list = pile.removeAllButTop();
+    	  shuffle();
+      }
       return list.remove(0);
   }
   /**

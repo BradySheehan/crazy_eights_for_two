@@ -23,7 +23,7 @@ function Presenter() {
   this.view.setSuitListener(this.setSuit);
   this.playerNumber;
   this.intervalId;
-
+  this.cardIfEight;
   var request = new XMLHttpRequest();
   var params = window.location.search.split(/[?=&]/);
   for (var k = 1; k < params.length; k += 2) {
@@ -34,7 +34,7 @@ function Presenter() {
   }
 
   var presenter = this;
-  request.open("POST", "/CrazyServlet", true);
+  request.open("POST", "/CrazyServlet", false);
   request.addEventListener("load",
     function() { presenter.completeInitialization(request);} );
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -96,7 +96,7 @@ Presenter.prototype.pickCardHandler = function(connection) {
  */
 Presenter.prototype.pickCard = function() {
   var request = new XMLHttpRequest();
-  request.open("POST", "/CrazyServlet", true);
+  request.open("POST", "/CrazyServlet", false);
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   var presenter = this;
   request.addEventListener("load", function() { presenter.pickCardHandler(request);} );
@@ -133,11 +133,13 @@ Presenter.prototype.playCard = function(cardString) {
       this.pile.acceptACard(card);
       this.view.displayPileTopCard(card);
       if (this.pile.getTopCard().getValue() == "8") {
+        this.cardIfEight = card;
+        window.alert("displaying suit picker, original card =" + card);
         this.view.displaySuitPicker();  // Execution continues at setSuit after user picks suit
       } else {
         // window.alert("attempting to send play data to server");
         var request = new XMLHttpRequest();
-        request.open("POST", "/CrazyServlet", true);
+        request.open("POST", "/CrazyServlet", false);
         request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         var presenter = this;
         request.addEventListener("load", function() { presenter.playCardHandler();} );
@@ -153,15 +155,16 @@ Presenter.prototype.playCard = function(cardString) {
  * human's turn.
  */
 Presenter.prototype.setSuit = function(suit) {
+  window.alert("inside set suit, suit = " + suit);
   this.pile.setAnnouncedSuit(suit);
   this.view.undisplaySuitPicker();
   // window.alert("attempting to send play data to server");
   var request = new XMLHttpRequest();
-  request.open("POST", "/CrazyServlet", true);
+  request.open("POST", "/CrazyServlet", false);
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   var presenter = this;
   request.addEventListener("load", function() { presenter.playCardHandler();} );
-  request.send("type=play&player="+this.playerNumber+"&suit=" + suit + "&value=8");
+  request.send("type=play&player="+this.playerNumber+"&suit=" + this.cardIfEight.getSuit() + "&value=8&asuit="+suit);
 };
 
 
@@ -178,11 +181,13 @@ Presenter.prototype.pollHandler = function(request) {
       var pileASuit = doc.getElementsByTagName("pile")[0].getAttribute("asuit");
       this.pile.acceptACard(new Card(pileSuit, pileValue));
       this.view.displayPileTopCard(new Card(pileSuit, pileValue));
-      if(pileASuit) {
+      // window.alert("Pile handler, card = " + new Card(pileSuit, pileValue));
+      if(pileValue == "8") {
+        window.alert("Your opponent chose a suit of " + pileASuit)
         this.pile.setAnnouncedSuit(pileASuit);
       }
       var numOpponentCards = doc.getElementsByTagName("opponentcards")[0].textContent;
-      window.alert("opponent's number of cards is "+ numOpponentCards);
+      // window.alert("opponent's number of cards is "+ numOpponentCards);
       if(numOpponentCards == 0) {
          this.view.announceComputerWinner();
       }  else {
@@ -199,7 +204,7 @@ Presenter.prototype.pollHandler = function(request) {
 Presenter.prototype.poll = function() {
   // window.alert("polling");
   var request = new XMLHttpRequest();
-  request.open("POST", "/CrazyServlet", true);
+  request.open("POST", "/CrazyServlet", false);
   request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
   var presenter = this;
   request.addEventListener("load",

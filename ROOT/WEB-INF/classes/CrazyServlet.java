@@ -72,7 +72,7 @@ public class CrazyServlet extends HttpServlet {
         game1.getThisPlayer(Integer.parseInt(request.getParameter("player"))).remove(card1);
         game1.getPile().acceptACard(card1);
         if(card1.getValue().equals("8")) {
-          game1.getPile().setAnnouncedSuit(card1.getSuit());
+          game1.getPile().setAnnouncedSuit(String.valueOf(request.getParameter("asuit")));
         }
         // game1.playCard(Integer.parseInt(request.getParameter("player")), String.valueOf(request.getParameter("suit")), String.valueOf(request.getParameter("value")), String.valueOf(request.getParameter("suit")));
         game1.toggleTurn();
@@ -89,7 +89,7 @@ public class CrazyServlet extends HttpServlet {
         game1.addCard(Integer.parseInt(request.getParameter("player")), card1);
         game1.toggleTurn();
         pw = response.getWriter();
-        doc = topCardFromDeckAsXMLDoc(game1.getDeck().dealACard());
+        doc = topCardFromDeckAsXMLDoc(card1);
         try {
           transformer.transform(new DOMSource(doc), new StreamResult(pw));
         } catch (Exception e) {
