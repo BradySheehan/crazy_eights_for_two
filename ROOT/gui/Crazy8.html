@@ -31,7 +31,6 @@
         	padding:5px;
         	z-index:200}
       .clickable { cursor:pointer }
-      /*.blocking{} set bording, opacity, color */
     </style>
   </head>
   <body onload="init();">
@@ -43,7 +42,7 @@
          just as a placeholder (since we're going to
          use replaceChild on second child to change the
          display of the discard pile). -->
-    <div id="blocking" style="position:relative;height:25px;display:none"><p>Waiting for opponent to play...</p></div>
+    <div id="blocking" style="position:relative;height:25px;display:none;z-index:200;"><p>Waiting for opponent to play...</p></div>
     <div id="table"><img id="deck" src="../images/PlayingCards/back.png" alt="Click to pick a card." style="width:71px;height:96px" class="clickable"/><span></span></div>
 
     <!-- User's hand here is where we set opacity-->

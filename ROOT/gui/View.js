@@ -6,6 +6,9 @@
 function View(presenter) {
   this.presenter = presenter;
   this.cardClickHandler = null;
+  this.stopEventListener = function(event) {
+    event.stopPropagation();
+   }
 }
 
 /**
@@ -69,19 +72,6 @@ View.prototype.displayComputerHand = function(hand) {
   for (var i=0; i<hand.length; i++) {
     this.addBackCardImage(hand[i], myDiv);
   }
-
-  // Hand has more cards than are displayed, so add some to display
-  // if (hand.length > myDiv.childNodes.length) {
-  //   for (var i=myDiv.childNodes.length; i<hand.length; i++) {
-  //     this.addBackCardImage(hand[i],myDiv);
-  //   }
-  // }
-  // // Hand has fewer than are displayed, so remove some from display.
-  // else {
-  //   while (hand.length < myDiv.childNodes.length) {
-  //     myDiv.removeChild(myDiv.childNodes[myDiv.childNodes.length-1]);
-  //   }
-  // }
 };
 
 
@@ -149,8 +139,7 @@ View.prototype.announceHumanWinner = function() {
  * Announce that I have won.
  */
 View.prototype.announceComputerWinner = function() {
-      window.alert("Oh yeah!!  I am a WINNER and you are a, well, non-winner.");};
-
+      window.alert("You are a, well, non-winner.");};
 
 
 /** Internal function for adding this card image to the given div (human's hand)
@@ -194,30 +183,22 @@ View.prototype.addImageHelper = function(card, aDiv, URL, listener) {
 
 View.prototype.setBodyListener = function(){
    var body = document.getElementsByTagName("body")[0];
-   var stopEventListener = function(event) {
-    event.stopPropagation();
-   }
-  body.addEventListener("click", stopEventListener, false)
+  body.addEventListener("click", this.stopEventListener, true)
 };
 
 View.prototype.removeBodyListener = function() {
    var body = document.getElementsByTagName("body")[0];
-   var stopEventListener = function(event) {
-    event.stopPropagation();
-   }
-   window.alert("removing body listener\n body = " + body);
-   body.removeEventListener("click", stopEventListener, false);
+   body.removeEventListener("click", this.stopEventListener, true);
 };
 
 /**
- *
  * Add code for preventing clicking (stop propagation view listener on body stuff)
  * Change display when user is waiting for opponent to play.
  */
 View.prototype.blockPlay = function() {
   var div = document.getElementById("blocking");
   div.style.display="block";
-  var myHand = document.getElementById("myHand");
+  var myHand = document.getElementById("yourHand");
   myHand.style.setProperty("opacity", 0.5);
   this.setBodyListener();
 };
@@ -228,7 +209,7 @@ View.prototype.blockPlay = function() {
 View.prototype.unblockPlay = function() {
   var div = document.getElementById("blocking");
   div.style.display="none";
-  var myHand = document.getElementById("myHand");
+  var myHand = document.getElementById("yourHand");
   myHand.style.setProperty("opacity", 1);
   this.removeBodyListener();
 };

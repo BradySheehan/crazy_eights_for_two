@@ -29,7 +29,6 @@ function Presenter() {
   for (var k = 1; k < params.length; k += 2) {
     if (params[k] == "player") {
        this.playerNumber = Number(params[k+1]);
-       window.alert("playernumber = "+this.playerNumber);
     }
   }
 
@@ -134,7 +133,6 @@ Presenter.prototype.playCard = function(cardString) {
       this.view.displayPileTopCard(card);
       if (this.pile.getTopCard().getValue() == "8") {
         this.cardIfEight = card;
-        window.alert("displaying suit picker, original card =" + card);
         this.view.displaySuitPicker();  // Execution continues at setSuit after user picks suit
       } else {
         // window.alert("attempting to send play data to server");
@@ -155,7 +153,6 @@ Presenter.prototype.playCard = function(cardString) {
  * human's turn.
  */
 Presenter.prototype.setSuit = function(suit) {
-  window.alert("inside set suit, suit = " + suit);
   this.pile.setAnnouncedSuit(suit);
   this.view.undisplaySuitPicker();
   // window.alert("attempting to send play data to server");
